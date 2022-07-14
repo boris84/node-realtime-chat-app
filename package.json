@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "start": "node server/server.js",
-    "dev": "nodemon server/server"
+    "dev": "nodemon server/server",
+    "test": "mocha server/**/*.test.js",
+    "test-watch": "nodemon --exec 'npm test'"
   },
   "engines": {
     "node": "14.17.6"
@@ -13,6 +15,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "expect": "^1.20.2",
+    "mocha": "^3.0.2",
     "nodemon": "^2.0.19"
   },
   "dependencies": {

@@ -8,6 +8,8 @@ const socket = require('socket.io');
 const server = http.createServer(app);
 // Socket.io set-up
 const io = socket(server);
+const {generateMessage} = require('./utils/message');
+
 
 // Static files
 app.use(express.static('public'));
@@ -30,27 +32,14 @@ server.listen(port, () => {
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
 
-  socket.emit('newMessage', {
-    from: 'Admin',
-    text: 'Welcome to the Chat App',
-    createdAt: new Date().getTime()
-  });
-
-  socket.broadcast.emit('newMessage', {
-    from: 'Admin',
-    text: 'A new user has joined the chat ..',
-    createdAt: new Date().getTime()
-  });
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'A new user has joined the chat ..'));
 
   // Event listener on server for createMessaage
   socket.on('createMessage', (message) => {
     console.log('createMessage', message);
-    io.emit('newMessage', {
-      from: message.from,
-      text: message.text,
-      createdAt: new Date().getTime()
-    });
+    io.emit('newMessage', generateMessage(message.from, message.text));
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
     //   text: message.text,
