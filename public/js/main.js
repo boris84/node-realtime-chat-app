@@ -13,6 +13,31 @@ socket.on('disconnect', function () {
 // Event listener on client for newMessage
 socket.on('newMessage', function (message) {
   console.log('newMessage', message);
+  let li = document.createElement('li');
+  li.textContent = `${message.from}: ${message.text}`;
+  document.querySelector('.output').appendChild(li);
+});
+
+
+
+
+
+
+
+
+
+const button = document.querySelector('.btn');
+const message = document.querySelector('.message-field');
+
+button.addEventListener('click', function (e) {
+  e.preventDefault();
+
+  socket.emit('createMessage', {
+    from: 'User',
+    text: message.value
+  }, function () {
+
+  });
 });
 
 

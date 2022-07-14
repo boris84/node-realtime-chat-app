@@ -17,15 +17,15 @@
 
         <div class="chat-window">
           <p>Enter your name, a message then hit Send to start a chat with Simon.</p>
-          <div class="output"></div>
+          <ol class="output"></ol>
           <div class="feedback"></div>
       </div>
 
       <div class="user-input">
         <span>😀</span>
-        <input class="name-field" type="text" placeholder="Name"/>
-        <input class="message-field" type="text" placeholder="Message"/>
-        <button class="btn" type="button">Send</button>
+          <input class="name-field" type="text" placeholder="Name"/>
+          <input class="message-field" name="mesage" type="text" placeholder="Message"/>
+          <button class="btn" type="button">Send</button>
       </div>
     </div>
 
@@ -33,6 +33,7 @@
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@latest/dist/index.min.js"></script>
     <!-- loading in socket.io library -->
     <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/libs/jquery-3.6.0.min.js"></script>
     <script src="/js/main.js"></script>
 </body>
 </html>
