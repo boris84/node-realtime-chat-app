@@ -1,0 +1,195 @@
+@import url('https://fonts.googleapis.com/css2?family=Titan+One&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+.chatbox {
+  position: relative;
+  box-shadow: 0px 0px 10px 1px dimgray;
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
+.chat-window {
+  overflow: auto;
+  height: 420px;
+  margin: 5px;
+  background-color: lavender;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  background: slategray;
+  display: fixed;
+  margin: 5px;
+  top: 0;
+  left: 0;
+}
+
+header > i {
+  font-size: 40px;
+  color: #fff;
+  margin-left: -10px;
+  padding: 10px;
+  text-shadow: -1px 0 3px #000, -1px 0 2px #000, 1px -1px 3px #000, 1px 2px 3px #000;
+}
+
+h1 {
+  color: mediumslateblue;
+  font-size: 2.5rem;
+  font-family: 'Titan One', cursive;
+  text-shadow: -1px 0 3px #000, -1px 0 2px #000, 1px -1px 3px #000, 1px 2px 3px #000;
+  padding: 10px 10px 10px 15px;
+}
+
+.chat-window > p {
+  color: #666;
+  padding: 10px;
+  margin-bottom: 50px;
+  font-size: 0.9rem;
+  opacity: 0.4;
+  line-height: 1.5;
+  font-family: 'Verdana', sans-serif;
+}
+
+.output {
+  position: relative;
+  /* margin-bottom: 100px; */
+}
+
+.output p {
+  color: #000;
+  padding: 13px 13px;
+  margin: 5px 20px;
+  border-bottom: 0.2px solid lightgray;
+  border-radius: 10px;
+  width: fit-content;
+  background: silver;
+  font-family: 'Verdana', sans-serif;
+  font-size: 0.9rem;
+}
+
+.output p:nth-child(odd) {
+  background: plum;
+}
+
+.output > div {
+  position: relative;
+  margin-bottom: 20px;
+  font-size: 0.9rem;
+  left: 25px;
+}
+
+
+.feedback {
+  color: #666;
+  opacity: 0.4;
+  padding-left: 20px;
+  margin-bottom: 40px;
+  font-size: 0.9rem;
+}
+
+.user-input {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  padding: 5px;
+
+}
+
+span {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  cursor: pointer;
+  border-radius: 15px;
+  padding: 2px;
+  transition: box-shadow 0.1s ease;
+}
+
+span:hover {
+  box-shadow: 0px 0px 5px 0px #000;
+}
+
+.name-field {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 0.8rem;
+  border: 0.1px solid lightgray;
+  font-family: 'Verdana', sans-serif;
+}
+
+.message-field {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 0.8rem;
+  border: 0.1px solid lightgray;
+  font-family: 'Verdana', sans-serif;
+}
+
+
+.name-field, .message-field:focus {
+  outline: 0;
+}
+
+.btn {
+  padding: 10px;
+  background: slategray;
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.9rem;
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+  transition: opacity 0.2s ease;
+}
+
+.btn:hover {
+  opacity: 0.8;
+}
+
+
+
+
+
+
+
+/* mobile styles */
+@media only screen and (max-width: 1360px) {
+
+  /* h1 {
+    font-size: 2.4rem;
+  }
+
+  .chat-window p {
+    font-size: 0.8rem;
+  }
+
+  .btn {
+    font-size: 0.8rem;
+  } */
+
+  .chat-window {
+    height: 334px;
+  }
+
+  /* .output {
+    margin-bottom: 100px;
+  }
+
+  .output p {
+    font-size: 0.9rem;
+  } */
+
+}
