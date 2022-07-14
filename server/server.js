@@ -28,11 +28,17 @@ server.listen(port, () => {
 // Inside the callback we can pass a varible which is going to refer to THAT instance of the socket which is created - that 1 particukar socket.
 // So say we've got 10 different clients - ALL making a connection, each one is going to have their OWN socket between THAT client and our server.
 io.on('connection', (socket) => {
-  console.log('New User Connected')
+  console.log('New User Connected');
 
+  socket.emit('newMessage', {
+    from: 'Bob',
+    text: 'Hey, im new here. Thanks for having me',
+    createdAt: 123945
+  });
 
-  socket.on('disconnect', () => {
-    console.log('User was Disconnected')
+  // Event listener on server for createMessaage
+  socket.on('createMessage', (message) => {
+    console.log('createMessage', message);
   })
 
   //Handle chat event
@@ -43,6 +49,10 @@ io.on('connection', (socket) => {
   //Handle typing event
   socket.on('typing', (data) => {
     socket.broadcast.emit('typing', data);
+  });
+
+  socket.on('disconnect', () => {
+    console.log('User was Disconnected');
   });
 
 });

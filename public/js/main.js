@@ -1,5 +1,25 @@
-// Make connection
-const socket = io.connect('http://localhost:8000');
+// Initiate a connection request from client to server to open a websoket and keep that connection open
+var socket = io();
+
+
+socket.on('connect', function () {
+  console.log('Connected to server');
+
+  socket.emit('createMessage', {
+    from: 'Harry',
+    text: 'Hey there, I\'m Harry, i\'m new'
+  });
+});
+
+socket.on('disconnect', function () {
+  console.log('Disconnected from server');
+});
+
+// Event listener on client for newMessage
+socket.on('newMessage', function (message) {
+  console.log('newMessage', message);
+});
+
 
 
 
@@ -13,7 +33,7 @@ const emojiTrigger = document.querySelector('span');
 
 
 // Emit events
-button.addEventListener('click', () => {
+button.addEventListener('click', function () {
   socket.emit('chat', {
      name: name.value,
      message: message.value
@@ -22,13 +42,13 @@ button.addEventListener('click', () => {
 
 
 // Feedback message
-message.addEventListener('keypress', () => {
+message.addEventListener('keypress', function () {
   socket.emit('typing', name.value);
 });
 
 
 // Listen for events
-socket.on('chat', (data) => {
+socket.on('chat', function (data) {
   if (!data.name || !data.message) {
     return;
   }
@@ -36,7 +56,7 @@ socket.on('chat', (data) => {
   output.innerHTML += `<p><strong>${data.name}: </strong>${data.message}</p>`;
 });
 
-socket.on('typing', (data) => {
+socket.on('typing', function (data) {
   feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
 })
 
@@ -50,10 +70,10 @@ const picker = new EmojiButton({
   position: 'top-end'
 });
 
-picker.on('emoji', (emoji) => {
+picker.on('emoji', function (emoji) {
   message.value += emoji;
 })
 
-emojiTrigger.addEventListener('click', () => {
+emojiTrigger.addEventListener('click', function () {
   picker.pickerVisible ? picker.hidePicker() : picker.showPicker(message);
 })
