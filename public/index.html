@@ -31,7 +31,19 @@
 
 
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@latest/dist/index.min.js"></script>
+    <!-- loading in socket.io library -->
     <script src="/socket.io/socket.io.js"></script>
+    <!-- Initiate a connection request from client to server to open a websoket and keep that connection open -->
+    <script>
+      var clientSocket = io();
+      clientSocket.on('connect', () => {
+        console.log('Connected to server');
+      });
+
+      clientSocket.on('disconnect', () => {
+        console.log('Disconnected from server');
+      });
+    </script>
     <script src="main.js"></script>
 </body>
 </html>
