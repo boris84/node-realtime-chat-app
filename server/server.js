@@ -30,26 +30,25 @@ server.listen(port, () => {
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
-  socket.emit('newMessage', {
-    from: 'Bob',
-    text: 'Hey, im new here. Thanks for having me',
-    createdAt: 123945
-  });
-
   // Event listener on server for createMessaage
   socket.on('createMessage', (message) => {
     console.log('createMessage', message);
+    io.emit('newMessage', {
+      from: message.from,
+      text: message.text,
+      createdAt: new Date().getTime()
+    })
   })
 
   //Handle chat event
-  socket.on('chat', (data) => {
-    io.sockets.emit('chat', data);
-  });
+  // socket.on('chat', (data) => {
+  //   io.sockets.emit('chat', data);
+  // });
 
   //Handle typing event
-  socket.on('typing', (data) => {
-    socket.broadcast.emit('typing', data);
-  });
+  // socket.on('typing', (data) => {
+  //   socket.broadcast.emit('typing', data);
+  // });
 
   socket.on('disconnect', () => {
     console.log('User was Disconnected');
