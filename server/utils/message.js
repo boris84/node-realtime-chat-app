@@ -1,8 +1,10 @@
+let moment = require('moment');
+
 let generateMessage = (from, text) => {
   return {
     from,
     text,
-    createdAt: new Date().getTime()
+    createdAt: moment().valueOf()
   };
 };
 

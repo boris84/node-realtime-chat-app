@@ -1,7 +1,6 @@
 // Initiate a connection request from client to server to open a websoket and keep that connection open
 var socket = io();
 
-
 socket.on('connect', function () {
   console.log('Connected to server');
 });
@@ -10,16 +9,25 @@ socket.on('disconnect', function () {
   console.log('Disconnected from server');
 });
 
+
+
+
+
 // Event listener on client for newMessage
 socket.on('newMessage', function (message) {
-  console.log('newMessage', message);
-  let li = document.createElement('li');
-  li.textContent = `${message.from}: ${message.text}`;
-  document.querySelector('.output').appendChild(li);
+  let formattedTime = moment(message.createdAt).format('h:mm a');
+
+  let div = document.createElement('div');
+  document.querySelector('.output').appendChild(div);
+
+  let p = document.createElement('p');
+  p.innerHTML = `<strong>${message.from}</strong>: ${message.text}`;
+  div.appendChild(p);
+
+  let small = document.createElement('small');
+  small.innerHTML = `${formattedTime}`;
+  div.appendChild(small);
 });
-
-
-
 
 
 
@@ -28,6 +36,31 @@ socket.on('newMessage', function (message) {
 
 const button = document.querySelector('.btn');
 const message = document.querySelector('.message-field');
+const sidebar = document.querySelector('.side-bar');
+const icon1 = document.querySelector('.icon1');
+const icon2 = document.querySelector('.icon2');
+const h3 = document.querySelector('h3');
+
+icon1.addEventListener('click', function (e) {
+  sidebar.classList.add('active');
+  icon1.style.display = 'none';
+  icon2.style.display = 'block';
+  h3.classList.add('fadein');
+  h3.classList.remove('fadeout');
+});
+
+icon2.addEventListener('click', function (e) {
+  sidebar.classList.remove('active');
+  icon2.style.display = 'none';
+  icon1.style.display = 'block';
+  h3.classList.remove('fadein');
+  h3.classList.add('fadeout');
+});
+
+
+
+
+
 
 button.addEventListener('click', function (e) {
   e.preventDefault();
@@ -38,6 +71,7 @@ button.addEventListener('click', function (e) {
   }, function () {
 
   });
+    message.value = '';
 });
 
 
@@ -49,7 +83,6 @@ button.addEventListener('click', function (e) {
 // const message = document.querySelector('.message-field');
 // const button = document.querySelector('.btn');
 // const feedback = document.querySelector('.feedback');
-// const emojiTrigger = document.querySelector('span');
 
 
 // Emit events
@@ -86,14 +119,20 @@ button.addEventListener('click', function (e) {
 
 
 // Emoji picker
-// const picker = new EmojiButton({
-//   position: 'top-end'
-// });
-//
-// picker.on('emoji', function (emoji) {
-//   message.value += emoji;
-// });
-//
-// emojiTrigger.addEventListener('click', function () {
-//   picker.pickerVisible ? picker.hidePicker() : picker.showPicker(message);
-// });
+
+const emojiTrigger = document.querySelector('span');
+
+// mobile: position: 'bottom-center',
+// desktop: position: 'top-end'
+
+const picker = new EmojiButton({
+  position: 'bottom-center'
+});
+
+picker.on('emoji', function (emoji) {
+  message.value += emoji;
+});
+
+emojiTrigger.addEventListener('click', function () {
+  picker.pickerVisible ? picker.hidePicker() : picker.showPicker(message);
+});
