@@ -15,13 +15,13 @@
   height: 100vh;
   width: 100%;
   overflow: hidden;
+  border: 5px solid #fff;
 }
 
 .chat-window {
   overflow: auto;
   height: 100%;
-  margin: 5px;
-  /* background-color: lavender; */
+  background-color: lavender;
 }
 
 header {
@@ -29,7 +29,6 @@ header {
   align-items: center;
   background: slategray;
   display: fixed;
-  margin: 5px;
   top: 0;
   left: 0;
 }
@@ -103,8 +102,6 @@ h1 {
   bottom: 0;
   left: 0;
   width: 100%;
-  padding: 5px;
-
 }
 
 span {
@@ -124,8 +121,8 @@ span:hover {
 .name-field {
   display: block;
   width: 100%;
-  padding: 10px;
-  font-size: 0.8rem;
+  padding: 11px;
+  font-size: 0.9rem;
   border: 0.1px solid lightgray;
   font-family: 'Verdana', sans-serif;
 }
@@ -133,8 +130,8 @@ span:hover {
 .message-field {
   display: block;
   width: 100%;
-  padding: 10px;
-  font-size: 0.8rem;
+  padding: 11px;
+  font-size: 0.9rem;
   border: 0.1px solid lightgray;
   font-family: 'Verdana', sans-serif;
 }
@@ -145,7 +142,7 @@ span:hover {
 }
 
 .btn {
-  padding: 10px;
+  padding: 11px;
   background: slategray;
   color: #fff;
   font-weight: bold;
@@ -153,11 +150,12 @@ span:hover {
   border: 0;
   cursor: pointer;
   width: 100%;
-  transition: opacity 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .btn:hover {
-  opacity: 0.8;
+  color: #fff;
+  background: lightslategray;
 }
 
 
@@ -169,31 +167,8 @@ span:hover {
 /* mobile styles */
 @media only screen and (max-width: 1360px) {
 
-  /* h1 {
-    font-size: 2.4rem;
-  }
-
-  .chat-window p {
-    font-size: 0.8rem;
-  }
-
-  .btn {
-    font-size: 0.8rem;
-  } */
-
-  /* .chat-window {
-    height: 334px;
-  }
-
-  .output p {
-    font-size: 0.9rem;
-  }
-  */
-
    .output {
     margin-bottom: 250px;
   }
-
-
 
 }
