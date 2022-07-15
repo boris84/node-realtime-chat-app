@@ -19,9 +19,9 @@
 
 .chat-window {
   overflow: auto;
-  height: 420px;
+  height: 100%;
   margin: 5px;
-  background-color: lavender;
+  /* background-color: lavender; */
 }
 
 header {
@@ -62,7 +62,7 @@ h1 {
 
 .output {
   position: relative;
-  margin-bottom: 100px;
+  margin-bottom: 250px;
 }
 
 .output li {
@@ -191,7 +191,7 @@ span:hover {
   */
 
    .output {
-    margin-bottom: 150px;
+    margin-bottom: 250px;
   }
 
 
