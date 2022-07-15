@@ -23,7 +23,9 @@ server.listen(port, () => {
 
 
 
-
+// Configure Server to allow for Incoming Websocket Connections.
+//This means the Server will be able to accept connections and we'll be setting up the client to make the connection.
+// The we'll have a persistent connection and we can send data back and forth whether from server to client or client to server.
 
 // listening out for an event called 'connection' for when the connection is made between browser and server.
 // We pass in a callback to fire when connection is made.
