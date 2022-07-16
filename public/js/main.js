@@ -18,11 +18,6 @@ socket.on('disconnect', function () {
 // Event listener on client for newMessage
 socket.on('newMessage', function (message) {
 
-  if (!message.from || !message.text) {
-     notification.pause();
-     return;
-  }
-
   let formattedTime = moment(message.createdAt).format('h:mm a');
 
   let div = document.createElement('div');
@@ -35,10 +30,10 @@ socket.on('newMessage', function (message) {
   let small = document.createElement('small');
   small.innerHTML = `${formattedTime}`;
   div.appendChild(small);
-  
-  const notification = document.getElementById('notification-sound');
-  notification.play();
+
 });
+
+
 
 
 
@@ -76,14 +71,20 @@ icon2.addEventListener('click', function (e) {
 
 button.addEventListener('click', function (e) {
   e.preventDefault();
+  const notification = document.getElementById('notification-sound');
 
   socket.emit('createMessage', {
     from: 'User',
-    text: message.value
-  }, function () {
-
-  });
-    message.value = '';
+    text: message.value,
+    sound: notification.play()
+  }, function (message) {
+       if (!message.text) {
+         notification.muted = true;
+       } else {
+         notification.muted = false;
+       }
+    });
+     message.value = '';
 });
 
 

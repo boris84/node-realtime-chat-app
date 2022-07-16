@@ -40,8 +40,10 @@ io.on('connection', (socket) => {
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
-    io.emit('newMessage', generateMessage(message.from, message.text));
-    callback('1. This is from the server');
+    if (message.text) {
+      io.emit('newMessage', generateMessage(message.from, message.text, message.sound));
+    }
+    callback(message);
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
     //   text: message.text,

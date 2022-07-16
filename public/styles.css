@@ -222,7 +222,9 @@ span:hover {
 }
 
 
-
+.hide {
+  display: none;
+}
 
 
 
