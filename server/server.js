@@ -44,7 +44,7 @@ io.on('connection', (socket) => {
       callback(message);
       return;
     } else {
-      io.emit('newMessage', generateMessage(message.from, message.text, message.sound));
+      io.emit('newMessage', generateMessage(message.from, message.text, message.notification));
     }
 
 
@@ -53,7 +53,6 @@ io.on('connection', (socket) => {
     //   text: message.text,
     //   createdAt: new Date().getTime()
     // });
-
   });
 
 
@@ -62,10 +61,12 @@ io.on('connection', (socket) => {
   //   io.sockets.emit('chat', data);
   // });
 
-  //Handle typing event
-  // socket.on('typing', (data) => {
-  //   socket.broadcast.emit('typing', data);
-  // });
+
+  // Handle typing event
+  socket.on('typing', (data) => {
+    socket.broadcast.emit('typing', data);
+  });
+
 
   socket.on('disconnect', () => {
     console.log('User was Disconnected');

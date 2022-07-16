@@ -17,7 +17,8 @@ socket.on('disconnect', function () {
 
 
 
-
+const name = document.querySelector('.name-field');
+const feedback = document.querySelector('.feedback');
 const notification = document.getElementById('notification-sound');
 const button = document.querySelector('.btn');
 const message = document.querySelector('.message-field');
@@ -58,7 +59,7 @@ button.addEventListener('click', function (e) {
   socket.emit('createMessage', {
     from: 'User',
     text: message.value,
-    sound: notification.play()
+    notification: notification.play()
   }, function (message) {
        if (!message.text) {
          notification.muted = true;
@@ -75,6 +76,8 @@ button.addEventListener('click', function (e) {
 // Event listener on client for newMessage
 socket.on('newMessage', function (message) {
 
+  feedback.innerHTML = '';
+
   let formattedTime = moment(message.createdAt).format('h:mm a');
 
   let div = document.createElement('div');
@@ -88,12 +91,21 @@ socket.on('newMessage', function (message) {
   small.innerHTML = `${formattedTime}`;
   div.appendChild(small);
 
-console.log(message)
+// console.log(message)
 });
 
 
 
 
+
+// Feedback message
+message.addEventListener('keypress', function () {
+  socket.emit('typing', name.value);
+});
+
+socket.on('typing', function (data) {
+   feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
+});
 
 
 
@@ -123,10 +135,7 @@ console.log(message)
 // });
 
 
-// Feedback message
-// message.addEventListener('keypress', function () {
-//   socket.emit('typing', name.value);
-// });
+
 
 
 // Listen for events

@@ -78,12 +78,6 @@
   100%{opacity: 0}
 }
 
-.chat-window {
-  overflow: auto;
-  height: 100%;
-  background-color: lavender;
-}
-
 header {
   display: flex;
   align-items: center;
@@ -109,6 +103,13 @@ h1 {
   padding: 10px 10px 10px 15px;
 }
 
+.chat-window {
+  overflow: auto;
+  height: 100%;
+  background-color: lavender;
+  position: relative;
+}
+
 .chat-window > p {
   color: #666;
   padding: 10px;
@@ -119,8 +120,8 @@ h1 {
   font-family: 'Verdana', sans-serif;
 }
 
-.output {
-  position: relative;
+.feedback {
+  /* position: relative; */
   margin-bottom: 270px;
 }
 
@@ -141,16 +142,15 @@ h1 {
   list-style: none;
 }
 
-/* .output div p:nth-child(odd) {
+.output div p:nth-child(odd) {
   background: plum;
-} */
+}
 
 .output small {
   position: relative;
   font-size: 0.9rem;
   left: 25px;
 }
-
 
 .feedback {
   color: #666;
@@ -232,7 +232,7 @@ span:hover {
 /* mobile styles */
 @media only screen and (max-width: 1360px) {
 
-   .output {
+   .feedback {
     margin-bottom: 270px;
   }
 
