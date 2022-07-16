@@ -13,8 +13,16 @@ socket.on('disconnect', function () {
 
 
 
+
+
 // Event listener on client for newMessage
 socket.on('newMessage', function (message) {
+
+  if (!message.from || !message.text) {
+     notification.pause();
+     return;
+  }
+
   let formattedTime = moment(message.createdAt).format('h:mm a');
 
   let div = document.createElement('div');
@@ -27,6 +35,9 @@ socket.on('newMessage', function (message) {
   let small = document.createElement('small');
   small.innerHTML = `${formattedTime}`;
   div.appendChild(small);
+  
+  const notification = document.getElementById('notification-sound');
+  notification.play();
 });
 
 
@@ -40,6 +51,7 @@ const sidebar = document.querySelector('.side-bar');
 const icon1 = document.querySelector('.icon1');
 const icon2 = document.querySelector('.icon2');
 const h3 = document.querySelector('h3');
+
 
 icon1.addEventListener('click', function (e) {
   sidebar.classList.add('active');
