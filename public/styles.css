@@ -128,7 +128,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-.output p {
+.output div p {
   color: #000;
   padding: 13px 13px;
   margin: 5px 20px;
@@ -141,9 +141,9 @@ h1 {
   list-style: none;
 }
 
-.output p:nth-child(odd) {
+/* .output div p:nth-child(odd) {
   background: plum;
-}
+} */
 
 .output small {
   position: relative;

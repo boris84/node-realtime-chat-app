@@ -15,40 +15,10 @@ socket.on('disconnect', function () {
 
 
 
-// Event listener on client for newMessage
-socket.on('newMessage', function (message) {
-
-  let formattedTime = moment(message.createdAt).format('h:mm a');
-
-  let div = document.createElement('div');
-  document.querySelector('.output').appendChild(div);
-
-  let p = document.createElement('p');
-  p.innerHTML = `<strong>${message.from}</strong>: ${message.text}`;
-  div.appendChild(p);
-
-  let small = document.createElement('small');
-  small.innerHTML = `${formattedTime}`;
-  div.appendChild(small);
-
-});
 
 
 
 const notification = document.getElementById('notification-sound');
-
-socket.on('notificationSound', function (sound) {
-  if (sound) {
-    socket.on('newMessage', function () {
-       notification.play()
-    })
-  }
-})
-
-
-
-
-
 const button = document.querySelector('.btn');
 const message = document.querySelector('.message-field');
 const sidebar = document.querySelector('.side-bar');
@@ -78,17 +48,60 @@ icon2.addEventListener('click', function (e) {
 
 
 
+
+
+
+// Create a new message from client
 button.addEventListener('click', function (e) {
   e.preventDefault();
 
   socket.emit('createMessage', {
     from: 'User',
-    text: message.value
+    text: message.value,
+    sound: notification.play()
   }, function (message) {
-  
+       if (!message.text) {
+         notification.muted = true;
+       } else {
+         notification.muted = false;
+       }
     });
      message.value = '';
 });
+
+
+
+
+// Event listener on client for newMessage
+socket.on('newMessage', function (message) {
+
+  let formattedTime = moment(message.createdAt).format('h:mm a');
+
+  let div = document.createElement('div');
+  document.querySelector('.output').appendChild(div);
+
+  let p = document.createElement('p');
+  p.innerHTML = `<strong>${message.from}</strong>: ${message.text}`;
+  div.appendChild(p);
+
+  let small = document.createElement('small');
+  small.innerHTML = `${formattedTime}`;
+  div.appendChild(small);
+
+console.log(message)
+});
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -135,7 +148,6 @@ button.addEventListener('click', function (e) {
 
 
 // Emoji picker
-
 const emojiTrigger = document.querySelector('span');
 
 // mobile: position: 'bottom-center',
