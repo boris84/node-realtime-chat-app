@@ -40,9 +40,7 @@ io.on('connection', (socket) => {
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
-    if (message.text) {
-      io.emit('newMessage', generateMessage(message.from, message.text, message.sound));
-    }
+    io.emit('newMessage', generateMessage(message.from, message.text));
     callback(message);
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
@@ -50,6 +48,8 @@ io.on('connection', (socket) => {
     //   createdAt: new Date().getTime()
     // });
   });
+
+  socket.broadcast.emit('notificationSound', true);
 
   //Handle chat event
   // socket.on('chat', (data) => {

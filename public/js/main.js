@@ -35,6 +35,15 @@ socket.on('newMessage', function (message) {
 
 
 
+const notification = document.getElementById('notification-sound');
+
+socket.on('notificationSound', function (sound) {
+  if (sound) {
+    socket.on('newMessage', function () {
+       notification.play()
+    })
+  }
+})
 
 
 
@@ -71,18 +80,12 @@ icon2.addEventListener('click', function (e) {
 
 button.addEventListener('click', function (e) {
   e.preventDefault();
-  const notification = document.getElementById('notification-sound');
 
   socket.emit('createMessage', {
     from: 'User',
-    text: message.value,
-    sound: notification.play()
+    text: message.value
   }, function (message) {
-       if (!message.text) {
-         notification.muted = true;
-       } else {
-         notification.muted = false;
-       }
+  
     });
      message.value = '';
 });
