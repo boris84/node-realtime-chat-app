@@ -34,26 +34,27 @@ server.listen(port, () => {
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
-  socket.emit('newMessage', generateMessage('Admin', 'Welcome to the chat app'));
-  socket.broadcast.emit('newMessage', generateMessage('Admin', 'A new user has joined the chat ..'));
+  socket.emit('newMessage', generateMessage('Simon', 'Welcome to the chat app'));
+  socket.broadcast.emit('newMessage', generateMessage('Simon', 'A new user has joined the chat ..'));
 
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
-    if (!message.text) {
+    if (!message.from || !message.text) {
       callback(message);
       return;
     } else {
-      io.emit('newMessage', generateMessage(message.from, message.text, message.notification));
+      io.sockets.emit('newMessage', generateMessage(message.from, message.text, message.notification));
     }
-
-
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
     //   text: message.text,
     //   createdAt: new Date().getTime()
     // });
   });
+
+
+
 
 
   //Handle chat event

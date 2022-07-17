@@ -52,22 +52,22 @@ icon2.addEventListener('click', function (e) {
 
 
 
-// Create a new message from client
+// Enit a new message from client
 button.addEventListener('click', function (e) {
   e.preventDefault();
 
   socket.emit('createMessage', {
-    from: 'User',
+    from: name.value,
     text: message.value,
     notification: notification.play()
   }, function (message) {
-       if (!message.text) {
+       if (!name.value || !message.value) {
          notification.muted = true;
-       } else {
-         notification.muted = false;
        }
+        notification.muted = false;
     });
      message.value = '';
+
 });
 
 
@@ -91,18 +91,19 @@ socket.on('newMessage', function (message) {
   small.innerHTML = `${formattedTime}`;
   div.appendChild(small);
 
-// console.log(message)
+console.log(message)
 });
 
 
 
 
 
-// Feedback message
+// Emit a Feedback message from client
 message.addEventListener('keypress', function () {
   socket.emit('typing', name.value);
 });
 
+// Event listener on client for feedback
 socket.on('typing', function (data) {
    feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
 });
