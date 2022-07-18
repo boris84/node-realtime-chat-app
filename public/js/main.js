@@ -65,7 +65,7 @@ button.addEventListener('click', function (e) {
 
 // Emit a Feedback message from client
 message.addEventListener('keypress', function () {
-  socket.emit('createMessage', name.value);
+  socket.emit('typing', name.value);
 });
 
 
@@ -106,7 +106,7 @@ socket.on('newMessage', function (message) {
 
 
 // Listen for notification event from server
-socket.on('notificationSound', function (sound) {
+socket.on('createMessage', function (sound) {
   if (sound) {
     socket.on('newMessage', function () {
        notification.play()
