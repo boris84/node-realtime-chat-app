@@ -2,21 +2,28 @@ const express = require('express');
 const app = express();
 const http = require('http');
 // Configure port for Heroku
-const port = process.env.PORT || 8000;
+const PORT = process.env.PORT || 8000;
 const socket = require('socket.io');
+const cors = require('cors');
+app.use(cors());
 
 const server = http.createServer(app);
 // Socket.io set-up
-const io = socket(server);
+const io = socket(server, {
+  cors: {
+    origin: '*',
+  }
+});
 const {generateMessage} = require('./utils/message');
+
 
 
 // Static files
 app.use(express.static('public'));
 
 
-server.listen(port, () => {
-  console.log(`listening for requests on port ${port}`);
+server.listen(PORT, () => {
+  console.log(`listening for requests on port ${PORT}`);
 });
 
 
@@ -40,12 +47,8 @@ io.on('connection', (socket) => {
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
-    if (!message.from || !message.text) {
-      callback(message);
-      return;
-    } else {
-      io.sockets.emit('newMessage', generateMessage(message.from, message.text, message.notification));
-    }
+    callback('recieved data');
+    io.sockets.emit('newMessage', generateMessage(message.from, message.text));
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
     //   text: message.text,
@@ -54,13 +57,8 @@ io.on('connection', (socket) => {
   });
 
 
-
-
-
-  //Handle chat event
-  // socket.on('chat', (data) => {
-  //   io.sockets.emit('chat', data);
-  // });
+  // Emit notification sound to all sockets except this one
+  socket.broadcast.emit('notificationSound', true);
 
 
   // Handle typing event

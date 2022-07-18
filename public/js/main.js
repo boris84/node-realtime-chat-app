@@ -1,3 +1,17 @@
+// Query DOM
+const name = document.querySelector('.name-field');
+const feedback = document.querySelector('.feedback');
+const notification = document.getElementById('notification-sound');
+const button = document.querySelector('.btn');
+const message = document.querySelector('.message-field');
+const sidebar = document.querySelector('.side-bar');
+const icon1 = document.querySelector('.icon1');
+const icon2 = document.querySelector('.icon2');
+const h3 = document.querySelector('h3');
+
+
+
+
 // Initiate a connection request from client to server to open a websoket and keep that connection open
 var socket = io();
 
@@ -12,22 +26,7 @@ socket.on('disconnect', function () {
 
 
 
-
-
-
-
-
-const name = document.querySelector('.name-field');
-const feedback = document.querySelector('.feedback');
-const notification = document.getElementById('notification-sound');
-const button = document.querySelector('.btn');
-const message = document.querySelector('.message-field');
-const sidebar = document.querySelector('.side-bar');
-const icon1 = document.querySelector('.icon1');
-const icon2 = document.querySelector('.icon2');
-const h3 = document.querySelector('h3');
-
-
+// Toggle sidebar button
 icon1.addEventListener('click', function (e) {
   sidebar.classList.add('active');
   icon1.style.display = 'none';
@@ -48,9 +47,7 @@ icon2.addEventListener('click', function (e) {
 
 
 
-
-
-
+// EMIT EVENTS
 
 // Enit a new message from client
 button.addEventListener('click', function (e) {
@@ -58,23 +55,36 @@ button.addEventListener('click', function (e) {
 
   socket.emit('createMessage', {
     from: name.value,
-    text: message.value,
-    notification: notification.play()
-  }, function (message) {
-       if (!name.value || !message.value) {
-         notification.muted = true;
-       }
-        notification.muted = false;
-    });
-     message.value = '';
+    text: message.value
+  }, function () {
 
+    });
+    message.value = '';
+});
+
+
+// Emit a Feedback message from client
+message.addEventListener('keypress', function () {
+  socket.emit('typing', name.value);
 });
 
 
 
 
-// Event listener on client for newMessage
+
+// EVENT LISTENERS
+
+// Listen for typing event from server
+socket.on('typing', function (data) {
+   feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
+});
+
+
+// Listen for newMessage event from server
 socket.on('newMessage', function (message) {
+   if (!message.from || !message.text) {
+     return;
+   }
 
   feedback.innerHTML = '';
 
@@ -91,66 +101,20 @@ socket.on('newMessage', function (message) {
   small.innerHTML = `${formattedTime}`;
   div.appendChild(small);
 
-console.log(message)
+  console.log(message);
 });
 
 
-
-
-
-// Emit a Feedback message from client
-message.addEventListener('keypress', function () {
-  socket.emit('typing', name.value);
-});
-
-// Event listener on client for feedback
-socket.on('typing', function (data) {
-   feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
+// Listen for notification event from server
+socket.on('notificationSound', function (sound) {
+  if (sound) {
+    socket.on('newMessage', function () {
+       notification.play()
+    });
+  }
 });
 
 
-
-
-
-
-
-
-
-
-
-
-// Query DOM
-// const output = document.querySelector('.output');
-// const name = document.querySelector('.name-field');
-// const message = document.querySelector('.message-field');
-// const button = document.querySelector('.btn');
-// const feedback = document.querySelector('.feedback');
-
-
-// Emit events
-// button.addEventListener('click', function () {
-//   socket.emit('chat', {
-//      name: name.value,
-//      message: message.value
-//   });
-// });
-
-
-
-
-
-// Listen for events
-// socket.on('chat', function (data) {
-//   if (!data.name || !data.message) {
-//     return;
-//   }
-//   feedback.innerHTML = '';
-//   output.innerHTML += `<p><strong>${data.name}: </strong>${data.message}</p>`;
-// });
-//
-// socket.on('typing', function (data) {
-//   feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
-// })
 
 
 

@@ -1,10 +1,9 @@
 let moment = require('moment');
 
-let generateMessage = (from, text, notification) => {
+let generateMessage = (from, text) => {
   return {
     from,
     text,
-    notification,
     createdAt: moment().valueOf()
   };
 };
