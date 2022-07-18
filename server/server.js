@@ -63,9 +63,12 @@ io.on('connection', (socket) => {
 
 
   // Handle typing event
-  socket.on('typing', (data) => {
-    socket.broadcast.emit('typing', data);
-  });
+  // socket.on('typing', (data) => {
+  //   socket.broadcast.emit('typing', data);
+  // });
+  socket.on('typing',(message) => {
+    socket.broadcast.emit('getTypingStatus', 'typing!');
+ });
 
 
   socket.on('disconnect', () => {
