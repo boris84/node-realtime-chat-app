@@ -110,9 +110,9 @@ socket.on('notificationSound', function (sound) {
   if (sound) {
     socket.on('newMessage', function () {
        notification.play()
-    });
+    })
   }
-});
+})
 
 
 
