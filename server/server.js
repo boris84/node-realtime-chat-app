@@ -11,7 +11,7 @@ const server = http.createServer(app);
 // Socket.io set-up
 const io = socket(server, {
   cors: {
-    origin: '*',
+    origin: 'http://127.0.0.1:8000/'
   }
 });
 const {generateMessage} = require('./utils/message');
