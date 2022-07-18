@@ -45,9 +45,10 @@ io.on('connection', (socket) => {
   socket.broadcast.emit('newMessage', generateMessage('Simon', 'A new user has joined the chat ..'));
 
   // Event listener on server for createMessaage
-  socket.on('createMessage', (message, callback) => {
+  socket.on('createMessage', (message) => {
+    socket.broadcast.emit('createMessage', message);
     console.log('createMessage', message);
-    callback('recieved data');
+    // callback('recieved data');
     io.sockets.emit('newMessage', generateMessage(message.from, message.text));
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
@@ -62,9 +63,9 @@ io.on('connection', (socket) => {
 
 
   // Handle typing event
-  socket.on('typing', (data) => {
-    socket.broadcast.emit('typing', data);
-  });
+  // socket.on('typing', (data) => {
+  //   socket.broadcast.emit('typing', data);
+  // });
 
 
   socket.on('disconnect', () => {
