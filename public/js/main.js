@@ -64,26 +64,20 @@ button.addEventListener('click', function (e) {
 
 
 // Emit a Feedback message from client
-// message.addEventListener('keypress', function () {
-//   socket.emit('typing', name.value);
-// });
+message.addEventListener('keypress', function () {
+  socket.emit('typing', name.value);
+});
 
-function sendTypingStatus() {
-  socket.emit('typing')
-}
 
-socket.on('getTypingStatus',message => {
-  feedback.innerHTML = `<p><em> ${message}...</em></p>`;
-})
 
 
 
 // EVENT LISTENERS
 
 // Listen for typing event from server
-// socket.on('typing', function (data) {
-//    feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
-// });
+socket.on('typing', function (data) {
+   feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
+});
 
 
 // Listen for newMessage event from server
