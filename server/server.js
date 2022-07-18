@@ -45,13 +45,11 @@ io.on('connection', (socket) => {
   socket.broadcast.emit('newMessage', generateMessage('Simon', 'A new user has joined the chat ..'));
 
   // Event listener on server for createMessaage
-  socket.on('createMessage', (message) => {
-    socket.broadcast.emit('createMessage', message);
+  socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
-    // callback('recieved data');
+    // callback(message);
     io.sockets.emit('newMessage', generateMessage(message.from, message.text));
-    // Emit notification sound to all sockets except this one
-    socket.broadcast.emit('notificationSound', true);
+
     // socket.broadcast.emit('newMessage', {
     //   from: message.from,
     //   text: message.text,
@@ -60,13 +58,14 @@ io.on('connection', (socket) => {
   });
 
 
-
+  // Emit notification sound to all sockets except this one
+  socket.broadcast.emit('notificationSound', true);
 
 
   // Handle typing event
-  // socket.on('typing', (data) => {
-  //   socket.broadcast.emit('typing', data);
-  // });
+  socket.on('typing', (data) => {
+    socket.broadcast.emit('typing', data);
+  });
 
 
   socket.on('disconnect', () => {

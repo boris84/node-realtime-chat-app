@@ -56,7 +56,7 @@ button.addEventListener('click', function (e) {
   socket.emit('createMessage', {
     from: name.value,
     text: message.value
-  }, function () {
+  }, function (message) {
 
     });
     message.value = '';
@@ -65,7 +65,7 @@ button.addEventListener('click', function (e) {
 
 // Emit a Feedback message from client
 message.addEventListener('keypress', function () {
-  socket.emit('createMessage', name.value);
+  socket.emit('typing', name.value);
 });
 
 
@@ -75,7 +75,7 @@ message.addEventListener('keypress', function () {
 // EVENT LISTENERS
 
 // Listen for typing event from server
-socket.on('createMessage', function (data) {
+socket.on('typing', function (data) {
    feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
 });
 
@@ -105,19 +105,15 @@ socket.on('newMessage', function (message) {
 });
 
 
+
 // Listen for notification event from server
 socket.on('notificationSound', function (sound) {
-<<<<<<< HEAD
   if (sound) {
     socket.on('newMessage', function () {
        notification.play()
-    })
+    });
   }
-})
-=======
-  notification.play()
 });
->>>>>>> 58a9aacc7602abceed7403494e5c05f5781dc53f
 
 
 
