@@ -12,6 +12,11 @@ const h3 = document.querySelector('h3');
 
 
 
+// chatp.css("background-color", "red");
+//
+// console.log(chatp);
+
+
 // Initiate a connection request from client to server to open a websoket and keep that connection open
 var socket = io();
 
@@ -50,8 +55,7 @@ icon2.addEventListener('click', function (e) {
 // EMIT EVENTS
 
 // Enit a new message from client
-button.addEventListener('click', function (e) {
-  e.preventDefault();
+button.addEventListener('click', function () {
 
   socket.emit('createMessage', {
     from: name.value,
@@ -67,6 +71,10 @@ button.addEventListener('click', function (e) {
 message.addEventListener('keypress', function () {
   socket.emit('typing', name.value);
 });
+
+
+
+
 
 
 
@@ -90,16 +98,13 @@ socket.on('newMessage', function (message) {
 
   let formattedTime = moment(message.createdAt).format('h:mm a');
 
-  let div = document.createElement('div');
-  document.querySelector('.output').appendChild(div);
-
   let p = document.createElement('p');
   p.innerHTML = `<strong>${message.from}</strong>: ${message.text}`;
-  div.appendChild(p);
+  document.querySelector('.output').appendChild(p);
 
-  let small = document.createElement('small');
-  small.innerHTML = `${formattedTime}`;
-  div.appendChild(small);
+  let div = document.createElement('div');
+  div.innerHTML = `${formattedTime}`;
+  document.querySelector('.output').appendChild(div);
 
   console.log(message);
 });
