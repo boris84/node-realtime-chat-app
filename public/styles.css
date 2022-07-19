@@ -7,13 +7,8 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
-  overflow: hidden;
-
-
 }
 
-body {
-}
 
 .chatbox {
   position: relative;
@@ -23,7 +18,6 @@ body {
   overflow: hidden;
   border: 5px solid #fff;
   overflow: hidden;
-
 }
 
 .side-bar {
@@ -146,7 +140,7 @@ h1 {
 }
 
 .output p:first-child {
-  background: cornflowerblue;
+  background: mediumslateblue;
 }
 
 .output p:nth-of-type(even) {
