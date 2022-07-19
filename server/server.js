@@ -41,7 +41,7 @@ server.listen(PORT, () => {
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
-  socket.emit('newMessage', generateMessage('Simon', 'Welcome to the chat app'));
+  socket.emit('newMessage', generateMessage('Simon', 'Welcome to Ping. Let\'s chat !'));
   socket.broadcast.emit('newMessage', generateMessage('Simon', 'A new user has joined the chat ..'));
 
   // Event listener on server for createMessaage
