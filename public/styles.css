@@ -33,7 +33,7 @@
   color: #fff;
   position: absolute;
   top: 10px;
-  left: 100px;
+  left: 45px;
   opacity: 0;
 }
 
@@ -57,11 +57,11 @@
 }
 
 .active {
-  width: 250px;
+  width: 150px;
 }
 
 .fadein {
-  animation: fadein 10s ease forwards;
+  animation: fadein 0s ease 0.8s forwards;
 }
 
 @keyframes fadein {
@@ -70,7 +70,7 @@
 }
 
 .fadeout {
-  animation: fadeout 0.5s ease forwards;
+  animation: fadeout 0s ease 0.8s forwards;
 }
 
 @keyframes fadeout {
@@ -210,9 +210,13 @@ span:hover {
   font-family: 'Verdana', sans-serif;
 }
 
-
 .name-field, .message-field:focus {
   outline: 0;
+}
+
+.btn-container {
+  display: flex;
+  align-content: center;
 }
 
 .btn {
@@ -223,8 +227,24 @@ span:hover {
   font-size: 0.9rem;
   border: 0;
   cursor: pointer;
-  width: 100%;
+  width: 90%;
   transition: all 0.2s ease;
+}
+
+.location-btn {
+  color: #fff;
+  flex-grow: 1;
+  align-self: center;
+  text-align: center;
+  background: darkseagreen;
+  border: 0;
+  padding: 11px;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.location-btn > i {
+  text-shadow: 0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000;
 }
 
 .btn:hover {
@@ -245,3 +265,28 @@ span:hover {
   }
 
 }
+
+
+
+
+/* @media only screen and (max-width: 700px) {
+  .active {
+    width: 100px;
+  }
+
+  .side-bar h3 {
+    left: 20px;
+  }
+} */
+
+
+
+/* @media only screen and (max-width: 525px) {
+  .active {
+    width: 70px;
+  }
+
+  .side-bar h3 {
+    left: 8px;
+  }
+} */

@@ -14,7 +14,7 @@ const io = socket(server, {
     origin: 'http://127.0.0.1:8000/'
   }
 });
-const {generateMessage} = require('./utils/message');
+const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 
 
@@ -41,21 +41,21 @@ server.listen(PORT, () => {
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
-  socket.emit('newMessage', generateMessage('Simon', 'Welcome to Ping. Let\'s chat !'));
-  socket.broadcast.emit('newMessage', generateMessage('Simon', 'A new user has joined the chat ..'));
+  socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !'));
+  socket.broadcast.emit('newMessage', generateMessage('Admin', 'A new user has joined the chat ..'));
 
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
     console.log('createMessage', message);
-    // callback(message);
     io.sockets.emit('newMessage', generateMessage(message.from, message.text));
-
-    // socket.broadcast.emit('newMessage', {
-    //   from: message.from,
-    //   text: message.text,
-    //   createdAt: new Date().getTime()
-    // });
+    callback();
   });
+
+
+  // Event listener for createLocationMessage
+  socket.on('createLocationMessage', (coords) => {
+    io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+  })
 
 
   // Emit notification sound to all sockets except this one
