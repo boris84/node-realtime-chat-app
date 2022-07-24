@@ -31,9 +31,8 @@
 
 .side-bar h3 {
   color: #fff;
-  position: absolute;
-  top: 10px;
-  left: 45px;
+  margin-top: 10px;
+  text-align: center;
   opacity: 0;
 }
 
@@ -220,15 +219,16 @@ span:hover {
 }
 
 .btn {
+  color: #fff;
   padding: 13px;
   color: #fff;
   font-weight: bold;
   font-size: 0.9rem;
-  border: 0;
   cursor: pointer;
   width: 90%;
   transition: all 0.2s ease;
   background: darkslategray;
+  border-right: 0
 }
 
 .location-btn {
@@ -237,7 +237,6 @@ span:hover {
   align-self: center;
   text-align: center;
   background: Chocolate;
-  border: 0;
   padding: 13px 18px;
   cursor: pointer;
   font-size: 0.9rem;
@@ -247,9 +246,8 @@ span:hover {
   text-shadow: 0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000;
 }
 
-.btn:hover {
-  color: #fff;
-  background: mediumblue;
+.btn:hover, .location-btn:hover {
+  filter: brightness(80%);
 }
 
 
@@ -263,7 +261,6 @@ span:hover {
    .feedback {
     margin-bottom: 270px;
   }
-
 }
 
 
@@ -281,12 +278,10 @@ span:hover {
 
 
 
-/* @media only screen and (max-width: 525px) {
-  .active {
-    width: 70px;
-  }
+@media only screen and (max-width: 375px) {
 
   .side-bar h3 {
-    left: 8px;
+    text-align: center;
   }
-} */
+
+}

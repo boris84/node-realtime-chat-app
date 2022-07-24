@@ -185,13 +185,15 @@ const emojiTrigger = document.querySelector('span');
 // desktop: position: 'top-end'
 
 const picker = new EmojiButton({
-  position: 'bottom-center'
-});
-
-picker.on('emoji', function (emoji) {
-  message.value += emoji;
+  position: 'bottom-center',
+  autoHide: false
 });
 
 emojiTrigger.addEventListener('click', function () {
   picker.pickerVisible ? picker.hidePicker() : picker.showPicker(message);
+});
+
+// Listen for emoji event
+picker.on('emoji', function (emoji) {
+  message.value += emoji;
 });
