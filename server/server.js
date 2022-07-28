@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http');
 // Configure port for Heroku
-const PORT = process.env.PORT || 8000;
+const PORT = process.env.PORT || 2000;
 const socket = require('socket.io');
 const cors = require('cors');
 app.use(cors());
@@ -11,11 +11,12 @@ const server = http.createServer(app);
 // Socket.io set-up
 const io = socket(server, {
   cors: {
-    origin: 'http://127.0.0.1:8000/'
+    origin: 'http://127.0.0.1:2000/'
   }
 });
 const {generateMessage, generateLocationMessage} = require('./utils/message');
-
+const redis = require('redis');
+const client = redis.createClient();
 
 
 // Static files
@@ -46,7 +47,15 @@ io.on('connection', (socket) => {
 
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
-    console.log('createMessage', message);
+    client.connect()
+    .then(() => {
+      console.log('redis connected..')
+      client.RPUSH("messages", `${message.from}:${message.text}`);
+    })
+    .catch((err) => {
+      console.log(err.message)
+    })
+
     io.sockets.emit('newMessage', generateMessage(message.from, message.text));
     callback();
   });
