@@ -82,7 +82,6 @@ message.addEventListener('keydown', function () {
 locationButton.addEventListener('click', function () {
   // first we need to check if the users browser has access to the geolocation api
   if (!navigator.geolocation) {
-    feedback.style.color = "red";
     return feedback.innerHTML = "Geolocation is not supported by your browser.";
   }
 
@@ -95,16 +94,15 @@ locationButton.addEventListener('click', function () {
     document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
 
     socket.emit('createLocationMessage', {
-    latitude: currentPosition.coords.latitude,
-    longitude: currentPosition.coords.longitude
-  });
+      latitude: currentPosition.coords.latitude,
+      longitude: currentPosition.coords.longitude
+    });
 
   }, function () {
-      locationButton.removeAttribute('disabled', 'disabled');
-      document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
-      feedback.style.color = "red";
-      return feedback.innerHTML = "Unable to fetch location.";
-  });
+       locationButton.removeAttribute('disabled', 'disabled');
+       document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
+       return feedback.innerHTML = "Unable to fetch location.";
+     });
 });
 
 
@@ -126,8 +124,8 @@ socket.on('newMessage', function (message) {
      return;
    }
 
-   feedback.innerHTML = '';
-
+  feedback.innerHTML = '';
+  
   let formattedTime = moment(message.createdAt).format('h:mm a');
 
   let p = document.createElement('p');
@@ -138,7 +136,7 @@ socket.on('newMessage', function (message) {
   div.innerHTML = `${formattedTime}`;
   document.querySelector('.output').appendChild(div);
 
-  console.log(message);
+  // console.log(message);
 });
 
 
@@ -149,6 +147,8 @@ socket.on('notificationSound', function (sound) {
     socket.on('newMessage', function () {
        notification.play()
     });
+  } else {
+      feedback.innerHTML = 'Your browser does not support the audio element required for notification sounds.';
   }
 });
 
