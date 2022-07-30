@@ -18,7 +18,7 @@ const io = socket(server, {
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 const redis = require('redis');
-const url = REDIS_URL || 'redis://127.0.0.1:6379';
+let url = process.env.REDIS_URL || process.env.REDIS_TLS_URL || 'redis://127.0.0.1:6379';
 const client = redis.createClient({
   url: url
 });
