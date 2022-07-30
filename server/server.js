@@ -19,8 +19,9 @@ const {generateMessage, generateLocationMessage} = require('./utils/message');
 
 
 const redis = require('redis');
+const url = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
 const client = redis.createClient({
-  url: 'redis://127.0.0.1:6379' 
+  url: url
 });
 client.connect().then(() => {
   console.log('redis client connected');
