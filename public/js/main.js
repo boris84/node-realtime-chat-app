@@ -5,6 +5,7 @@ const notification = document.getElementById('notification-sound');
 const button = document.querySelector('.btn');
 const message = document.querySelector('.message-field');
 const sidebar = document.querySelector('.side-bar');
+const chatWindow = document.querySelector('.chat-window');
 const icon1 = document.querySelector('.icon1');
 const icon2 = document.querySelector('.icon2');
 const h3 = document.querySelector('h3');
@@ -82,18 +83,22 @@ message.addEventListener('keydown', function () {
 locationButton.addEventListener('click', function () {
   // first we need to check if the users browser has access to the geolocation api
   if (!navigator.geolocation) {
+    // scroll down
+    chatWindow.scrollTop = chatWindow.scrollHeight;
     return feedback.innerHTML = "Geolocation is not supported by your browser.";
   }
 
   locationButton.setAttribute('disabled', 'disabled');
   document.querySelector('.location-btn i').style.textShadow = 'none';
   document.querySelector('.location-btn').style.innerHTML = 'Sending location ..';
+
   // getCurrentPosition takes 2 functions. A succes function and a failure function
   navigator.geolocation.getCurrentPosition(function (currentPosition) {
     locationButton.removeAttribute('disabled', 'disabled');
     document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
 
     socket.emit('createLocationMessage', {
+      from: name.value,
       latitude: currentPosition.coords.latitude,
       longitude: currentPosition.coords.longitude
     });
@@ -101,6 +106,8 @@ locationButton.addEventListener('click', function () {
   }, function () {
        locationButton.removeAttribute('disabled', 'disabled');
        document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
+       // scroll down
+       chatWindow.scrollTop = chatWindow.scrollHeight;
        return feedback.innerHTML = "Unable to fetch location.";
      });
 });
@@ -114,6 +121,8 @@ locationButton.addEventListener('click', function () {
 
 // Listen for typing event from server
 socket.on('typing', function (data) {
+   // scroll down
+   chatWindow.scrollTop = chatWindow.scrollHeight;
    feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
 });
 
@@ -124,8 +133,10 @@ socket.on('newMessage', function (message) {
      return;
    }
 
+  // scroll down
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+
   feedback.innerHTML = '';
-  
   let formattedTime = moment(message.createdAt).format('h:mm a');
 
   let p = document.createElement('p');
@@ -148,12 +159,20 @@ socket.on('notificationSound', function (sound) {
        notification.play()
     });
   } else {
+      // scroll down
+      chatWindow.scrollTop = chatWindow.scrollHeight;
       feedback.innerHTML = 'Your browser does not support the audio element required for notification sounds.';
   }
 });
 
 
 socket.on('newLocationMessage', function (message) {
+  if (!message.from) {
+    return;
+  }
+
+  // scroll down
+  chatWindow.scrollTop = chatWindow.scrollHeight;
 
   feedback.innerHTML = '';
 

@@ -17,16 +17,17 @@ const io = socket(server, {
 });
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 
-
 const redis = require('redis');
-const url = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+const url = REDIS_URL || 'redis://127.0.0.1:6379';
 const client = redis.createClient({
   url: url
 });
 client.connect().then(() => {
   console.log('redis client connected');
 })
-
+.catch((err) => {
+  console.log(err.message)
+})
 
 
 
@@ -54,12 +55,11 @@ function sendMessage(socket) {
 
       socket.emit('newMessage', {
         from: redisUsername,
-        text: redisMessage
+        text: redisMessage,
       });
     })
   })
 }
-
 
 
 
@@ -89,7 +89,7 @@ io.on('connection', (socket) => {
 
   // Event listener for createLocationMessage
   socket.on('createLocationMessage', (coords) => {
-    io.emit('newLocationMessage', generateLocationMessage('Admin', coords.latitude, coords.longitude));
+    io.emit('newLocationMessage', generateLocationMessage(coords.from, coords.latitude, coords.longitude));
   })
 
 
