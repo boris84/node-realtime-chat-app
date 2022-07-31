@@ -17,24 +17,17 @@ const io = socket(server, {
 });
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 
-// Static files
-app.use(express.static('public'));
-
-
 const redis = require('redis');
-let URL = '6379';
-let client
+const client = redis.createClient({
+  url: process.env.REDIS_URL,
+  socket: {
+    tls: true,
+    rejectUnauthorized: false
+  }
+});
 
-if (process.env.REDIS_URL) {
-    client = redis.createClient(process.env.REDIS_URL);
-} else {
-    client = redis.createClient(URL);
-}
-
-
-
-
-client.connect().then(() => {
+client.connect()
+.then(() => {
   console.log('redis client connected');
 })
 .catch((err) => {
@@ -42,13 +35,16 @@ client.connect().then(() => {
 })
 
 
+
+
+
+// Static files
+app.use(express.static('public'));
+
+
 server.listen(PORT, () => {
   console.log(`listening for requests on port ${PORT}`);
 });
-
-
-
-
 
 
 
