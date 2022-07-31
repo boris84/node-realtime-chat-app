@@ -16,8 +16,6 @@ const locationButton = document.querySelector('.location-btn');
 
 
 
-
-
 // Initiate a connection request from client to server to open a websoket and keep that connection open
 var socket = io();
 
@@ -28,6 +26,8 @@ socket.on('connect', function () {
 socket.on('disconnect', function () {
   console.log('Disconnected from server');
 });
+
+
 
 
 
@@ -53,6 +53,8 @@ icon2.addEventListener('click', function (e) {
 
 
 
+
+
 // EMIT EVENTS
 
 // Enit a new message from client
@@ -72,6 +74,7 @@ button.addEventListener('click', function () {
 message.addEventListener('keydown', function () {
   socket.emit('typing', name.value);
 });
+
 
 
 
@@ -168,7 +171,7 @@ socket.on('notificationSound', function (sound) {
 
 socket.on('newLocationMessage', function (message) {
   if (!message.from) {
-    return;
+     return;
   }
 
   // scroll down

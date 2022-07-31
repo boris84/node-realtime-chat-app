@@ -8,7 +8,6 @@ const cors = require('cors');
 app.use(cors());
 
 const server = http.createServer(app);
-
 // Socket.io set-up
 const io = socket(server, {
   cors: {
@@ -16,18 +15,6 @@ const io = socket(server, {
   }
 });
 const {generateMessage, generateLocationMessage} = require('./utils/message');
-
-const redis = require('redis');
-const client = redis.createClient({url: process.env.REDIS_URL || 'redis://127.0.0.1:6379'});
-
-client.connect()
-.then(() => {
-  console.log('redis client connected');
-})
-.catch((err) => {
-  console.log(err.message)
-})
-
 
 
 // Static files
@@ -39,24 +26,6 @@ server.listen(PORT, () => {
 });
 
 
-
-function sendMessage(socket) {
-  client.LRANGE('messages', '0', '-1', (err, data) => {
-    return data;
-  })
-  .then((data) => {
-    data.map(x => {
-      const userMessage = x.split(':');
-      const redisUsername = userMessage[0];
-      const redisMessage = userMessage[1];
-
-      socket.emit('newMessage', {
-        from: redisUsername,
-        text: redisMessage,
-      });
-    })
-  })
-}
 
 
 
@@ -70,15 +39,12 @@ function sendMessage(socket) {
 // So say we've got 10 different clients - ALL making a connection, each one is going to have their OWN socket between THAT client and our server.
 io.on('connection', (socket) => {
   console.log('New User Connected');
-  sendMessage(socket);
 
   socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !'));
   socket.broadcast.emit('newMessage', generateMessage('Admin', 'A new user has joined the chat ..'));
 
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
-    client.RPUSH('messages', `${message.from}:${message.text}`);
-
     io.sockets.emit('newMessage', generateMessage(message.from, message.text));
     callback();
   });
