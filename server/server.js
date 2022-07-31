@@ -22,8 +22,8 @@ app.use(express.static('public'));
 
 
 const redis = require('redis');
-const REDIS_PORT = process.env.REDIS_TLS_URL || 'redis://127.0.0.1:6379';
-const client = redis.createClient(REDIS_PORT);
+const URL = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+const client = redis.createClient(URL);
 
 client.connect().then(() => {
   console.log('redis client connected');
