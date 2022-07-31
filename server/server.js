@@ -22,7 +22,7 @@ app.use(express.static('public'));
 
 
 const redis = require('redis');
-let URL = 'redis://127.0.0.1:6379';
+let URL = '6379';
 let client
 
 if (process.env.REDIS_URL) {
