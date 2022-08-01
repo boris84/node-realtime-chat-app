@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const http = require('http');
 // Configure port for Heroku
-const PORT = process.env.PORT || 2000;
+const PORT = process.env.PORT || 8000;
 const socket = require('socket.io');
 const cors = require('cors');
 app.use(cors());
@@ -11,7 +11,7 @@ const server = http.createServer(app);
 // Socket.io set-up
 const io = socket(server, {
   cors: {
-    origin: 'http://127.0.0.1:2000/'
+    origin: 'http://127.0.0.1:8000/'
   }
 });
 const {generateMessage, generateLocationMessage} = require('./utils/message');
@@ -46,7 +46,9 @@ io.on('connection', (socket) => {
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
     io.sockets.emit('newMessage', generateMessage(message.from, message.text));
-    callback();
+    if (!message.from || !message.text) {
+      callback('Cannot process message.');
+    }
   });
 
 
@@ -64,7 +66,6 @@ io.on('connection', (socket) => {
   socket.on('typing', (data) => {
     socket.broadcast.emit('typing', data);
   });
-
 
   socket.on('disconnect', () => {
     console.log('User was Disconnected');

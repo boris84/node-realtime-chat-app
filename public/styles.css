@@ -19,10 +19,6 @@
   border: 5px solid #fff;
 }
 
-.danger {
-  color: red;
-}
-
 .side-bar {
   position: relative;
   background: darkslategray;
@@ -158,7 +154,7 @@ header h1 {
   top: 55px;
 } */
 
-.output > div {
+.output div {
   color: #fff;
   position: relative;
   font-size: 0.9rem;
@@ -172,6 +168,11 @@ header h1 {
   padding-left: 20px;
   font-size: 0.9rem;
   font-weight: lighter;
+}
+
+.error {
+  color: crimson;
+  opacity: 1;
 }
 
 .user-input {

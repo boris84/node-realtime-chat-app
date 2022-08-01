@@ -24,7 +24,7 @@
 
       <div class="chat-window">
         <div class="container">
-          <p>Enter your name, a message then hit Send to start a ping with Simon.</p>
+          <p>Enter your name, a message then hit Send to start a Ping.</p>
           <div class="output"></div>
           <div class="feedback"></div>
         </div>
@@ -45,12 +45,25 @@
       <audio src="notification.mp3" id="notification-sound" type="audio/mpeg"></audio>
     </div>
 
+    <script id="message-template" type="text/template">
+      <p><strong>{{ from }}:</strong> {{ text }}</p>
+      <div>{{ createdAt }}</div>
+      <div class="feedback">{{ feedback }}</div>
+    </script>
+
+    <script id="location-message-template" type="text/template">
+      <p><strong>{{ from }}: </strong><a href="{{url}}" target="_blank">My current location</a></p>
+      <div>{{ createdAt }}</div>
+      <!-- <div class="feedback">{{ feedback }}</div> -->
+    </script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@latest/dist/index.min.js"></script>
     <!-- loading in socket.io library -->
     <script src="/socket.io/socket.io.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="/js/libs/moment.js"></script>
+    <script src="/js/libs/jquery-3.6.0.min.js"></script>
+    <script src="/js/libs/mustache.js"></script>
     <script src="/js/main.js"></script>
 </body>
 </html>

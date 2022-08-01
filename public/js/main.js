@@ -14,8 +14,6 @@ const locationButton = document.querySelector('.location-btn');
 
 
 
-
-
 // Initiate a connection request from client to server to open a websoket and keep that connection open
 var socket = io();
 
@@ -26,7 +24,6 @@ socket.on('connect', function () {
 socket.on('disconnect', function () {
   console.log('Disconnected from server');
 });
-
 
 
 
@@ -53,8 +50,6 @@ icon2.addEventListener('click', function (e) {
 
 
 
-
-
 // EMIT EVENTS
 
 // Enit a new message from client
@@ -63,9 +58,12 @@ button.addEventListener('click', function () {
   socket.emit('createMessage', {
     from: name.value,
     text: message.value
-  }, function () {
-
-    });
+  }, function (data) {
+       // scroll down
+       chatWindow.scrollTop = chatWindow.scrollHeight;
+       feedback.classList.add('error');
+       feedback.innerHTML = data;
+  });
     message.value = '';
 });
 
@@ -88,31 +86,32 @@ locationButton.addEventListener('click', function () {
   if (!navigator.geolocation) {
     // scroll down
     chatWindow.scrollTop = chatWindow.scrollHeight;
+    feedback.classList.add('error');
     return feedback.innerHTML = "Geolocation is not supported by your browser.";
   }
 
   locationButton.setAttribute('disabled', 'disabled');
   document.querySelector('.location-btn i').style.textShadow = 'none';
-  document.querySelector('.location-btn').style.innerHTML = 'Sending location ..';
 
   // getCurrentPosition takes 2 functions. A succes function and a failure function
   navigator.geolocation.getCurrentPosition(function (currentPosition) {
     locationButton.removeAttribute('disabled', 'disabled');
     document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
 
-    socket.emit('createLocationMessage', {
-      from: name.value,
-      latitude: currentPosition.coords.latitude,
-      longitude: currentPosition.coords.longitude
-    });
+  socket.emit('createLocationMessage', {
+    from: name.value,
+    latitude: currentPosition.coords.latitude,
+    longitude: currentPosition.coords.longitude
+  });
 
-  }, function () {
-       locationButton.removeAttribute('disabled', 'disabled');
-       document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
-       // scroll down
-       chatWindow.scrollTop = chatWindow.scrollHeight;
-       return feedback.innerHTML = "Unable to fetch location.";
-     });
+}, function () {
+     locationButton.removeAttribute('disabled', 'disabled');
+     document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
+     // scroll down
+     chatWindow.scrollTop = chatWindow.scrollHeight;
+     feedback.classList.add('error');
+     return feedback.innerHTML = "Unable to fetch location.";
+   });
 });
 
 
@@ -126,73 +125,78 @@ locationButton.addEventListener('click', function () {
 socket.on('typing', function (data) {
    // scroll down
    chatWindow.scrollTop = chatWindow.scrollHeight;
-   feedback.innerHTML = `<p><em> ${data} is typing a message...</em></p>`;
+   feedback.classList.remove('error');
+   feedback.innerHTML = `<p><em> ${data} is typing a message ...</em></p>`;
 });
+
+
+
 
 
 // Listen for newMessage event from server
 socket.on('newMessage', function (message) {
-   if (!message.from || !message.text) {
-     return;
-   }
+  let formattedTime = moment(message.createdAt).format('h:mm a');
+  const template = $('#message-template').html();
 
-  // scroll down
-  chatWindow.scrollTop = chatWindow.scrollHeight;
+  if (!message.from || !message.text) {
+    return;
+  }
 
   feedback.innerHTML = '';
-  let formattedTime = moment(message.createdAt).format('h:mm a');
 
-  let p = document.createElement('p');
-  p.innerHTML = `<strong>${message.from}</strong>: ${message.text}`;
-  document.querySelector('.output').appendChild(p);
+  let html = Mustache.render(template, {
+    from: message.from,
+    text: message.text,
+    createdAt: formattedTime,
+    feedback: feedback.innerHTML
+  });
 
-  let div = document.createElement('div');
-  div.innerHTML = `${formattedTime}`;
-  document.querySelector('.output').appendChild(div);
-
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+  $('.output').append(html);
   // console.log(message);
 });
 
 
 
+
+
 // Listen for notification event from server
 socket.on('notificationSound', function (sound) {
+
   if (sound) {
     socket.on('newMessage', function () {
-       notification.play()
+      notification.play()
     });
   } else {
       // scroll down
       chatWindow.scrollTop = chatWindow.scrollHeight;
+      feedback.classList.add('error');
       feedback.innerHTML = 'Your browser does not support the audio element required for notification sounds.';
   }
 });
 
 
+
+
+
 socket.on('newLocationMessage', function (message) {
+  let formattedTime = moment(message.createdAt).format('h:mm a');
+  const template = $('#location-message-template').html();
+
   if (!message.from) {
      return;
   }
 
-  // scroll down
-  chatWindow.scrollTop = chatWindow.scrollHeight;
-
   feedback.innerHTML = '';
 
-  let p = document.createElement('p');
-  let a = document.createElement('a');
-  a.setAttribute('target', "_blank");
-  a.setAttribute('href', message.url);
-  a.innerHTML = 'My current location';
+  let html = Mustache.render(template, {
+    from: message.from,
+    url: message.url,
+    createdAt: formattedTime
+  });
 
-  p.innerHTML = `<strong>${message.from}</strong>: `;
-  p.appendChild(a);
-  document.querySelector('.output').appendChild(p);
-
-  let formattedTime = moment(message.createdAt).format('h:mm a');
-  let div = document.createElement('div');
-  div.innerHTML = `${formattedTime}`;
-  document.querySelector('.output').appendChild(div);
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+  $('.output').append(html);
 });
 
 
