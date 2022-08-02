@@ -1,6 +1,7 @@
 // Query DOM
 const name = document.querySelector('.name-field');
 const feedback = document.querySelector('.feedback');
+const errors = document.querySelector('.errors');
 const notification = document.getElementById('notification-sound');
 const button = document.querySelector('.btn');
 const message = document.querySelector('.message-field');
@@ -61,8 +62,8 @@ button.addEventListener('click', function () {
   }, function (data) {
        // scroll down
        chatWindow.scrollTop = chatWindow.scrollHeight;
-       feedback.classList.add('error');
-       feedback.innerHTML = data;
+       errors.classList.add('error');
+       errors.innerHTML = data;
   });
     message.value = '';
 });
@@ -86,8 +87,8 @@ locationButton.addEventListener('click', function () {
   if (!navigator.geolocation) {
     // scroll down
     chatWindow.scrollTop = chatWindow.scrollHeight;
-    feedback.classList.add('error');
-    return feedback.innerHTML = "Geolocation is not supported by your browser.";
+    errors.classList.add('error');
+    return errors.innerHTML = "Geolocation is not supported by your browser.";
   }
 
   locationButton.setAttribute('disabled', 'disabled');
@@ -98,19 +99,26 @@ locationButton.addEventListener('click', function () {
     locationButton.removeAttribute('disabled', 'disabled');
     document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
 
-  socket.emit('createLocationMessage', {
-    from: name.value,
-    latitude: currentPosition.coords.latitude,
-    longitude: currentPosition.coords.longitude
-  });
+    if (!name.value) {
+      // scroll down
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+      errors.classList.add('error');
+      return errors.innerHTML = "Cannot process location. Name is required.";
+    }
+
+    socket.emit('createLocationMessage', {
+      from: name.value,
+      latitude: currentPosition.coords.latitude,
+      longitude: currentPosition.coords.longitude
+    });
 
 }, function () {
      locationButton.removeAttribute('disabled', 'disabled');
      document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
      // scroll down
      chatWindow.scrollTop = chatWindow.scrollHeight;
-     feedback.classList.add('error');
-     return feedback.innerHTML = "Unable to fetch location.";
+     errors.classList.add('error');
+     return errors.innerHTML = "Unable to fetch location.";
    });
 });
 
@@ -125,7 +133,7 @@ locationButton.addEventListener('click', function () {
 socket.on('typing', function (data) {
    // scroll down
    chatWindow.scrollTop = chatWindow.scrollHeight;
-   feedback.classList.remove('error');
+   errors.innerHTML = '';
    feedback.innerHTML = `<p><em> ${data} is typing a message ...</em></p>`;
 });
 
@@ -143,6 +151,7 @@ socket.on('newMessage', function (message) {
   }
 
   feedback.innerHTML = '';
+  errors.innerHTML = '';
 
   let html = Mustache.render(template, {
     from: message.from,
@@ -170,8 +179,8 @@ socket.on('notificationSound', function (sound) {
   } else {
       // scroll down
       chatWindow.scrollTop = chatWindow.scrollHeight;
-      feedback.classList.add('error');
-      feedback.innerHTML = 'Your browser does not support the audio element required for notification sounds.';
+      errors.classList.add('error');
+      errors.innerHTML = 'Your browser does not support the audio element required for notification sounds.';
   }
 });
 
@@ -188,6 +197,7 @@ socket.on('newLocationMessage', function (message) {
   }
 
   feedback.innerHTML = '';
+  errors.innerHTML = '';
 
   let html = Mustache.render(template, {
     from: message.from,

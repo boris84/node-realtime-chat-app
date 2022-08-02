@@ -27,6 +27,7 @@
           <p>Enter your name, a message then hit Send to start a Ping.</p>
           <div class="output"></div>
           <div class="feedback"></div>
+          <div class="errors"></div>
         </div>
       </div>
 
@@ -47,13 +48,13 @@
 
     <script id="message-template" type="text/template">
       <p><strong>{{ from }}:</strong> {{ text }}</p>
-      <div>{{ createdAt }}</div>
+      <time>{{ createdAt }}</time>
       <div class="feedback">{{ feedback }}</div>
     </script>
 
     <script id="location-message-template" type="text/template">
-      <p><strong>{{ from }}: </strong><a href="{{url}}" target="_blank">My current location</a></p>
-      <div>{{ createdAt }}</div>
+      <p><strong>{{ from }}:</strong> <a href="{{url}}" target="_blank">My current location</a></p>
+      <time>{{ createdAt }}</time>
       <!-- <div class="feedback">{{ feedback }}</div> -->
     </script>
 

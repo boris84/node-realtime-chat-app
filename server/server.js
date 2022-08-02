@@ -47,7 +47,7 @@ io.on('connection', (socket) => {
   socket.on('createMessage', (message, callback) => {
     io.sockets.emit('newMessage', generateMessage(message.from, message.text));
     if (!message.from || !message.text) {
-      callback('Cannot process message.');
+      callback('Cannot process message. The required fields are empty.');
     }
   });
 
