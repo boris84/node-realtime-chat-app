@@ -201,6 +201,7 @@ header h1 {
   padding-left: 20px;
   font-size: 0.9rem;
   width: fit-content;
+  padding-right: 20px;
 }
 
 .user-input {
