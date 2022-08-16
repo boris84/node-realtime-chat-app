@@ -117,7 +117,7 @@ header h1 {
 .chat-window .container > p {
   color: #fff;
   padding: 15px 8px 10px 22px;
-  margin-bottom: 50px;
+  margin-bottom: 10px;
   font-size: 0.9rem;
   opacity: 0.2;
   line-height: 1.5;
@@ -157,7 +157,7 @@ header h1 {
   position: relative;
   font-size: 0.9rem;
   left: 25px;
-  margin-bottom: 40px;
+  margin-bottom: 10px;
   width: fit-content;
   align-self: flex-start;
 }
@@ -167,7 +167,7 @@ header h1 {
   align-self: flex-end;
   position: relative;
   padding-right: 50px;
-  margin-bottom: 0px;
+  margin-bottom: 10px;
 }
 
 .feedback {
@@ -181,12 +181,10 @@ header h1 {
 
 .feedback:nth-of-type(odd) {
   float: left;
-  margin-top: 15px;
 }
 
 .feedback:nth-of-type(even) {
   float: right;
-  margin-top: 35px;
   padding-right: 20px;
 }
 
