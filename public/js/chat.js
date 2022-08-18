@@ -11,6 +11,7 @@ const icon1 = document.querySelector('.icon1');
 const icon2 = document.querySelector('.icon2');
 const h3 = document.querySelector('h3');
 const locationButton = document.querySelector('.location-btn');
+const userList = document.querySelector('.users');
 
 
 
@@ -19,7 +20,16 @@ const locationButton = document.querySelector('.location-btn');
 var socket = io();
 
 socket.on('connect', function () {
-  console.log('Connected to server');
+  let params = $.deparam(window.location.search);
+
+  socket.emit('join', params, function (err) {
+    if (err) {
+      alert(err);
+      window.location.href = '/';
+    } else {
+      console.log('no error')
+    }
+  });
 });
 
 socket.on('disconnect', function () {
@@ -27,24 +37,38 @@ socket.on('disconnect', function () {
 });
 
 
+socket.on('updateUserList', function (users) {
+  let ol = $('<ol></ol>');
+
+  users.forEach(function (user) {
+    ol.append($('<li></li>').text(user));
+  });
+
+  $('.users').html(ol);
+});
 
 
 
-// Toggle sidebar button
+// toggle sidebar button open
 icon1.addEventListener('click', function (e) {
   sidebar.classList.add('active');
   icon1.style.display = 'none';
   icon2.style.display = 'block';
   h3.classList.add('fadein');
   h3.classList.remove('fadeout');
+  userList.classList.remove('fadeout');
+  userList.classList.add('fadein');
 });
 
+// toggle sidebar button closed
 icon2.addEventListener('click', function (e) {
   sidebar.classList.remove('active');
   icon2.style.display = 'none';
   icon1.style.display = 'block';
   h3.classList.remove('fadein');
   h3.classList.add('fadeout');
+  userList.classList.add('fadeout');
+  userList.classList.remove('fadein');
 });
 
 

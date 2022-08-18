@@ -15,6 +15,9 @@ const io = socket(server, {
   }
 });
 const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {isRealString} = require('./utils/validation');
+const {Users} = require('./utils/users');
+let users = new Users();
 
 
 // Static files
@@ -40,12 +43,34 @@ server.listen(PORT, () => {
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
-  socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !'));
-  socket.broadcast.emit('newMessage', generateMessage('Admin', 'A new user has joined the chat ..'));
+
+
+  socket.on('join', (params, callback) => {
+    if (!isRealString(params.name) || !isRealString(params.room)) {
+      return callback('Name and Room are required.');
+    }
+    socket.join(params.room);
+    users.removeUser(socket.id);
+    users.addUser(socket.id, params.name, params.room);
+
+    io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+    // socket.leave('room event')
+
+    // io.emit -> io.to('room event').emit
+    // socket.broadcast.emit -> socket.broadcast.to('room event').emit
+    // socket.emit
+
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !'));
+    socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat...`));
+    callback();
+  });
+
+
+
 
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
-    io.sockets.emit('newMessage', generateMessage(message.from, message.text));
+    io.emit('newMessage', generateMessage(message.from, message.text));
     if (!message.from || !message.text) {
       callback('Cannot process message. The required fields are empty.');
     }
@@ -68,7 +93,12 @@ io.on('connection', (socket) => {
   });
 
   socket.on('disconnect', () => {
-    console.log('User was Disconnected');
+    let user = users.removeUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit('updateUserList', users.getUserList(user.room));
+      io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left the chat.`));
+    }
   });
 
 });
