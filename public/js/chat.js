@@ -42,6 +42,7 @@ socket.on('updateUserList', function (users) {
 
   users.forEach(function (user) {
     ol.append($('<li></li>').text(user));
+
   });
 
   $('.users').html(ol);
@@ -54,8 +55,6 @@ icon1.addEventListener('click', function (e) {
   sidebar.classList.add('active');
   icon1.style.display = 'none';
   icon2.style.display = 'block';
-  h3.classList.add('fadein');
-  h3.classList.remove('fadeout');
   userList.classList.remove('fadeout');
   userList.classList.add('fadein');
 });
@@ -65,8 +64,6 @@ icon2.addEventListener('click', function (e) {
   sidebar.classList.remove('active');
   icon2.style.display = 'none';
   icon1.style.display = 'block';
-  h3.classList.remove('fadein');
-  h3.classList.add('fadeout');
   userList.classList.add('fadeout');
   userList.classList.remove('fadein');
 });
