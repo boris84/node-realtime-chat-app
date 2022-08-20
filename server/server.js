@@ -70,27 +70,33 @@ io.on('connection', (socket) => {
 
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
-    io.emit('newMessage', generateMessage(message.from, message.text));
-    if (!message.from || !message.text) {
-      callback('Cannot process message. The required fields are empty.');
+    let user = users.getUser(socket.id);
+
+    if (user && isRealString(message.text)) {
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
     }
   });
 
 
   // Event listener for createLocationMessage
   socket.on('createLocationMessage', (coords) => {
-    io.emit('newLocationMessage', generateLocationMessage(coords.from, coords.latitude, coords.longitude));
-  })
+    let user = users.getUser(socket.id);
+
+    if (user) {
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+    }
+  });
 
 
   // Emit notification sound to all sockets except this one
   socket.broadcast.emit('notificationSound', true);
 
 
-  // Handle typing event
-  socket.on('typing', (data) => {
-    socket.broadcast.emit('typing', data);
-  });
+  // // Handle typing event
+  // socket.on('typing', (data) => {
+  //   socket.broadcast.emit('typing', data);
+  // });
+
 
   socket.on('disconnect', () => {
     let user = users.removeUser(socket.id);

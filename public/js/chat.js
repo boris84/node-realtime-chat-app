@@ -78,7 +78,6 @@ icon2.addEventListener('click', function (e) {
 button.addEventListener('click', function () {
 
   socket.emit('createMessage', {
-    from: name.value,
     text: message.value
   }, function (data) {
        // scroll down
@@ -128,7 +127,6 @@ locationButton.addEventListener('click', function () {
     }
 
     socket.emit('createLocationMessage', {
-      from: name.value,
       latitude: currentPosition.coords.latitude,
       longitude: currentPosition.coords.longitude
     });
@@ -151,12 +149,12 @@ locationButton.addEventListener('click', function () {
 // EVENT LISTENERS
 
 // Listen for typing event from server
-socket.on('typing', function (data) {
-   // scroll down
-   chatWindow.scrollTop = chatWindow.scrollHeight;
-   errors.innerHTML = '';
-   feedback.innerHTML = `<p><em> ${data} is typing a message ...</em></p>`;
-});
+// socket.on('typing', function (data) {
+//    // scroll down
+//    chatWindow.scrollTop = chatWindow.scrollHeight;
+//    errors.innerHTML = '';
+//    feedback.innerHTML = `<p><em> ${data} is typing a message ...</em></p>`;
+// });
 
 
 
