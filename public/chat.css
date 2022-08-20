@@ -26,15 +26,15 @@
   float: left;
   border-right: 5px solid #fff;
   transition: width 0.8s ease 0.3s;
-
 }
 
 .side-bar h3 {
   color: #fff;
-  top: 10px;
+  top: 23px;
   position: absolute;
   left: 30px;
   opacity: 0;
+  text-decoration: 2px underline;
 }
 
 .icon1 {
@@ -61,27 +61,27 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-top: 40px;
+  margin-top: 68px;
   opacity: 0;
   height: 100%;
+  background: darkslategray;
 }
 
 .users ol {
+  /* border-top: 2px solid #fff; */
 }
 
 .users li {
   color: #fff;
-  margin: 20px 0;
+  margin: 16px 0;
   list-style: none;
-  font-size: 1rem;
+  font-size: 0.9rem;
   padding: 0px 25px;
-  font-family: 'Consolas', sans-serif;
   background-image: url("online.png");
   background-repeat: no-repeat;
   background-position: left;
   background-size: 15px;
 }
-
 
 .active {
   width: 150px;
@@ -124,7 +124,7 @@ header > i {
 }
 
 header h1 {
-  color: Chocolate;
+  color: forestgreen;
   font-size: 2.5rem;
   font-family: 'Titan One', cursive;
   text-shadow: -1px 0 3px #000, -1px 0 2px #000, 1px -1px 3px #000, 1px 2px 3px #000;
@@ -189,7 +189,6 @@ header h1 {
   width: fit-content;
   align-self: flex-start;
 }
-
 
 .output time:nth-of-type(even) {
   align-self: flex-end;
@@ -295,7 +294,7 @@ span:hover {
   flex-grow: 1;
   align-self: center;
   text-align: center;
-  background: Chocolate;
+  background: forestgreen;
   padding: 13px 18px;
   cursor: pointer;
   font-size: 0.9rem;
