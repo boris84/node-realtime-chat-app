@@ -3,19 +3,16 @@
   padding: 0;
   box-sizing: border-box;
   font-family: 'Roboto', sans-serif;
-
 }
 
 .center-form {
   background-image: linear-gradient(to bottom left, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.80), rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.80));
-  overflow: hidden;
 }
 
 .center-form__form {
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
   height: 100vh;
 }
 

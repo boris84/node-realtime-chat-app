@@ -30,20 +30,20 @@
 
 .icon1 {
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   position: absolute;
   top: 10px;
-  right: 8px;
+  right: 6px;
   cursor: pointer;
   font-weight: 800;
 }
 
 .icon2 {
   color: #fff;
-  font-size: 1.2rem;
+  font-size: 1.4rem;
   position: absolute;
   top: 10px;
-  right: 8px;
+  right: 6px;
   cursor: pointer;
   display: none;
 }
