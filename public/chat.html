@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" href="#">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+  <link href="chat.css" type="text/css" rel="stylesheet">
+  <title>Realtime Chat App</title>
+</head>
+<body>
+    <div class="chatbox">
+      <div class="side-bar">
+        <i class="bi bi-arrow-right-circle icon1"></i>
+        <i class="bi bi-arrow-left-circle icon2"></i>
+        <div class="users"></div>
+      </div>
+      <header>
+        <h1>Ping</h1>
+        <i class="bi bi-chat-dots-fill"></i>
+      </header>
+
+      <div class="chat-window">
+        <div class="container">
+          <p>Enter your name, a message then hit Send to start a Ping.</p>
+          <div class="output"></div>
+          <div class="feedback"></div>
+          <div class="errors"></div>
+        </div>
+      </div>
+
+      <div class="user-input">
+        <span>😀</span>
+        <form id="form">
+          <input class="name-field" type="text" placeholder="Name"  autofocus/>
+          <input class="message-field" type="text" placeholder="Message"/>
+          <div class="btn-container">
+            <button type="button" class="btn">Send</button>
+            <button type="button" class="location-btn"><i class="bi bi-geo-alt-fill"></i></button>
+          </div>
+        </form>
+      </div>
+
+      <audio src="notification.wav" id="notification-sound" type="audio/mpeg"></audio>
+    </div>
+
+    <script id="message-template" type="text/template">
+      <p><strong>{{ from }}:</strong> {{ text }}</p>
+      <time>{{ createdAt }}</time>
+      <div class="feedback">{{ feedback }}</div>
+    </script>
+
+    <script id="location-message-template" type="text/template">
+      <p><strong>{{ from }}:</strong> <a href="{{url}}" target="_blank">My current location</a></p>
+      <time>{{ createdAt }}</time>
+      <!-- <div class="feedback">{{ feedback }}</div> -->
+    </script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/emoji-button@latest/dist/index.min.js"></script>
+    <!-- loading in socket.io library -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/libs/moment.js"></script>
+    <script src="/js/libs/jquery-3.6.0.min.js"></script>
+    <script src="/js/libs/mustache.js"></script>
+    <script src="/js/libs/deparam.js"></script>
+    <script src="/js/chat.js"></script>
+</body>
+</html>
