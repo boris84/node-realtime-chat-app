@@ -89,13 +89,13 @@ io.on('connection', (socket) => {
 
 
   // Emit notification sound to all sockets except this one
-  socket.broadcast.emit('notificationSound', true);
+  socket.broadcast.emit('notificationSound', false);
 
 
   // // Handle typing event
-  // socket.on('typing', (data) => {
-  //   socket.broadcast.emit('typing', data);
-  // });
+  socket.on('typing', (data) => {
+    socket.broadcast.emit('typing', data);
+  });
 
 
   socket.on('disconnect', () => {

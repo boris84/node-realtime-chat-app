@@ -149,12 +149,12 @@ locationButton.addEventListener('click', function () {
 // EVENT LISTENERS
 
 // Listen for typing event from server
-// socket.on('typing', function (data) {
-//    // scroll down
-//    chatWindow.scrollTop = chatWindow.scrollHeight;
-//    errors.innerHTML = '';
-//    feedback.innerHTML = `<p><em> ${data} is typing a message ...</em></p>`;
-// });
+socket.on('typing', function (data) {
+   // scroll down
+   chatWindow.scrollTop = chatWindow.scrollHeight;
+   errors.innerHTML = '';
+   feedback.innerHTML = `<p><em> ${data} is typing a message ...</em></p>`;
+});
 
 
 
