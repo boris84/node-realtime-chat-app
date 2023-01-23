@@ -159,19 +159,29 @@ header h1 {
   font-family: 'Verdana', sans-serif;
   font-size: 0.9rem;
   list-style: none;
-  background: darkgoldenrod;
   align-self: flex-start;
+  background: darkgoldenrod;
 
 }
 
-.output p:first-child {
-  background: darkslategray;
+.output p:nth-of-type(odd) {
+  /* align-self: flex-end; */
+  background: darkgoldenrod;
 }
 
 .output p:nth-of-type(even) {
   background: seagreen;
   /* align-self: flex-end; */
 }
+
+.usercolor1 {
+  background: navy;
+}
+
+/* .usercolor2 {
+  background: seagreen;
+} */
+
 
 .output time {
   color: #fff;

@@ -88,7 +88,7 @@ io.on('connection', (socket) => {
   });
 
 
-  // Emit notification sound to all sockets except this one
+  // Emit notification sound to all sockets except user that sent it
   socket.broadcast.emit('notificationSound', false);
 
 

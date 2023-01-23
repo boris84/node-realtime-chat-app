@@ -20,6 +20,7 @@ const userList = document.querySelector('.users');
 var socket = io();
 
 socket.on('connect', function () {
+
   let params = $.deparam(window.location.search);
 
   socket.emit('join', params, function (err) {
@@ -27,7 +28,7 @@ socket.on('connect', function () {
       alert(err);
       window.location.href = '/';
     } else {
-      console.log('no error')
+      // console.log('no error')
     }
   });
 });
@@ -42,7 +43,6 @@ socket.on('updateUserList', function (users) {
 
   users.forEach(function (user) {
     ol.append($('<li></li>').text(user));
-
   });
 
   $('.users').html(ol);
@@ -159,9 +159,29 @@ socket.on('typing', function (data) {
 
 
 
+// class User {
+//   constructor(name, tag, color) {
+//     this.name = name;
+//     this.email = email;
+//     this.color = color;
+//   }
+// }
+// let userOne = new User('Admin', )
+
+
+// the new keyword
+// - creates a new empty object
+// - sets the value of 'this' to be the new empty object
+// - calls the constructor method
+
+
+
+
+
 
 // Listen for newMessage event from server
 socket.on('newMessage', function (message) {
+  // console.log(message.from)
   let formattedTime = moment(message.createdAt).format('h:mm a');
   const template = $('#message-template').html();
 
@@ -182,7 +202,23 @@ socket.on('newMessage', function (message) {
   chatWindow.scrollTop = chatWindow.scrollHeight;
   $('.output').append(html);
   // console.log(message);
-});
+
+
+  const pTags = document.querySelectorAll('.ptag');
+  // console.log(pTags)
+  // console.log(Array.isArray(Array.from(pTags)));
+
+  pTags.forEach(function(ptag) {
+  // console.log(ptag)
+    if (message.from === 'Admin') {
+      ptag.style.background += 'darkslategray';
+    }
+ })
+
+}); // end of newMessage event
+
+
+
 
 
 
@@ -231,8 +267,6 @@ socket.on('newLocationMessage', function (message) {
 
 
 
-
-
 // Emoji picker
 const emojiTrigger = document.querySelector('span');
 
@@ -252,3 +286,30 @@ emojiTrigger.addEventListener('click', function () {
 picker.on('emoji', function (emoji) {
   message.value += emoji;
 });
+
+
+
+
+//  const addColor = (callback) => {
+//    const pTags = document.getElementsByClassName('ptag');
+//    console.log(pTags[0].attributes[1])
+//    console.log(Array.isArray(Array.from(pTags)));
+
+//    Array.from(pTags).forEach(function(ptag) {
+//      let user = ptag.firstChild.innerText;
+//
+//      // console.log(ptag.attributes.style.value)
+//
+//        if (message.from === 'Admin') {
+//            callback(user, ptag, 'darkslategray');
+//        }
+//
+//        if (ptag.attributes[1] === undefined) {
+//            callback(user, ptag, 'darkgoldenrod');
+//        }
+//   })
+// };
+//
+// addaColor((user, tag, color) => {
+//   return tag.style.background += color;
+// })
