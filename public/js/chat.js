@@ -179,6 +179,15 @@ socket.on('typing', function (data) {
 
 
 
+
+
+
+
+
+
+
+
+
 // Listen for newMessage event from server
 socket.on('newMessage', function (message) {
   // console.log(message.from)
@@ -210,8 +219,35 @@ socket.on('newMessage', function (message) {
 
   pTags.forEach(function(ptag) {
   // console.log(ptag)
+  var letters = '0123456789ABCDEF'.split('');
+  var color = '#';
+
+  function randColor() {
+     for (var i = 0; i < 6; i++ ) {
+       color += letters[Math.floor(Math.random() * 16)];
+     }
+       return color;
+    };
+
+    class User {
+      constructor(name, tag) {
+        this.name = name;
+        this.tag = tag;
+        this.userColor = [];
+      }
+      addColor() {
+        this.userColor.push(randColor());
+        this.tag.style.background += this.userColor;
+      }
+    }
+
+    let userOne = new User(ptag.firstChild.textContent, ptag);
+    let userTwo = new User(ptag.firstChild.textContent, ptag);
+
     if (message.from === 'Admin') {
       ptag.style.background += 'darkslategray';
+    } else {
+      userTwo.addColor();
     }
  })
 

@@ -89,7 +89,7 @@ io.on('connection', (socket) => {
 
 
   // Emit notification sound to all sockets except user that sent it
-  socket.broadcast.emit('notificationSound', false);
+  socket.broadcast.emit('notificationSound', true);
 
 
   // // Handle typing event
