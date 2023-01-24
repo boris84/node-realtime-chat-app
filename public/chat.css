@@ -164,11 +164,11 @@ header h1 {
 
 .output p:nth-of-type(odd) {
   /* align-self: flex-end; */
-  /* background: darkgoldenrod; */
+  background: darkgoldenrod;
 }
 
 .output p:nth-of-type(even) {
-  /* background: seagreen; */
+  background: seagreen;
   /* align-self: flex-end; */
 }
 
