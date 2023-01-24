@@ -235,8 +235,6 @@ socket.on('newMessage', function (message) {
     }
 
     let userOne = new User(ptag.firstChild.textContent, ptag, 'darkslategray');
-    let userTwo = new User(ptag.firstChild.textContent, ptag, 'seagreen');
-    let userThree = new User(ptag.firstChild.textContent, ptag, 'navy');
     let params = $.deparam(window.location.search);
 
     if (message.from === 'Admin') {

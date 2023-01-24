@@ -168,7 +168,7 @@ header h1 {
 }
 
 .output p:nth-of-type(even) {
-  background: seagreen;
+  background: blue;
   /* align-self: flex-end; */
 }
 
