@@ -28,14 +28,19 @@ socket.on('connect', function () {
       alert(err);
       window.location.href = '/';
     } else {
-      // console.log('no error')
+      // console.log('no error');
     }
   });
 });
 
+
+
+
 socket.on('disconnect', function () {
   console.log('Disconnected from server');
 });
+
+
 
 
 socket.on('updateUserList', function (users) {
@@ -47,6 +52,7 @@ socket.on('updateUserList', function (users) {
 
   $('.users').html(ol);
 });
+
 
 
 
@@ -77,23 +83,26 @@ icon2.addEventListener('click', function (e) {
 // Enit a new message from client
 button.addEventListener('click', function () {
 
-  socket.emit('createMessage', {
-    text: message.value
-  }, function (data) {
-       // scroll down
-       chatWindow.scrollTop = chatWindow.scrollHeight;
-       errors.classList.add('error');
-       errors.innerHTML = data;
-  });
-    message.value = '';
-});
+    socket.emit('createMessage', {
+      text: message.value
+    }, function (message) {
+         // scroll down
+         chatWindow.scrollTop = chatWindow.scrollHeight;
+         errors.classList.add('error');
+         errors.innerHTML = '';
+    });
+      message.value = '';
+})
+
+
+
+
 
 
 // Emit a Feedback message from client
 message.addEventListener('keydown', function () {
   socket.emit('typing', name.value);
 });
-
 
 
 
@@ -128,7 +137,8 @@ locationButton.addEventListener('click', function () {
 
     socket.emit('createLocationMessage', {
       latitude: currentPosition.coords.latitude,
-      longitude: currentPosition.coords.longitude
+      longitude: currentPosition.coords.longitude,
+      backgroundColor: currentPosition.coords.backgroundColor
     });
 
 }, function () {
@@ -159,40 +169,14 @@ socket.on('typing', function (data) {
 
 
 
-// class User {
-//   constructor(name, tag, color) {
-//     this.name = name;
-//     this.email = email;
-//     this.color = color;
-//   }
-// }
-// let userOne = new User('Admin', )
-
-
-// the new keyword
-// - creates a new empty object
-// - sets the value of 'this' to be the new empty object
-// - calls the constructor method
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 // Listen for newMessage event from server
 socket.on('newMessage', function (message) {
-  // console.log(message.from)
+  // console.log(message)
   let formattedTime = moment(message.createdAt).format('h:mm a');
   const template = $('#message-template').html();
+  let ptags = document.querySelectorAll('.ptag');
 
   if (!message.from || !message.text) {
     return;
@@ -204,46 +188,15 @@ socket.on('newMessage', function (message) {
   let html = Mustache.render(template, {
     from: message.from,
     text: message.text,
+    backgroundColor: message.backgroundColor,
     createdAt: formattedTime,
     feedback: feedback.innerHTML
   });
 
   chatWindow.scrollTop = chatWindow.scrollHeight;
   $('.output').append(html);
-  // console.log(message);
-
-
-  const pTags = document.querySelectorAll('.ptag');
-  // console.log(pTags)
-  // console.log(Array.isArray(Array.from(pTags)));
-
-  pTags.forEach(function(ptag) {
-  // console.log(ptag)
-    class User {
-      constructor(name, tag, color) {
-        this.name = name;
-        this.tag = tag;
-        this.color = color;
-        this.id = 0;
-      }
-      addColor() {
-        this.tag.style.background += this.color;
-      }
-      removeColor() {
-        this.tag.style.background -= this.color;
-      }
-    }
-
-    let userOne = new User(ptag.firstChild.textContent, ptag, 'darkslategray');
-    let params = $.deparam(window.location.search);
-
-    if (message.from === 'Admin') {
-      userOne.addColor();
-    }
-
- })
-
-}); // end of newMessage event
+  console.log('client: ', message);
+});
 
 
 
@@ -285,6 +238,7 @@ socket.on('newLocationMessage', function (message) {
   let html = Mustache.render(template, {
     from: message.from,
     url: message.url,
+    backgroundColor: message.backgroundColor,
     createdAt: formattedTime
   });
 
@@ -314,49 +268,3 @@ emojiTrigger.addEventListener('click', function () {
 picker.on('emoji', function (emoji) {
   message.value += emoji;
 });
-
-
-
-
-
-
-
-
-
-// var letters = '0123456789ABCDEF'.split('');
-// var color = '#';
-//
-// function randColor() {
-//    for (var i = 0; i < 6; i++ ) {
-//      color += letters[Math.floor(Math.random() * 16)];
-//    }
-//      return color;
-//   };
-
-
-
-
-
-//  const addColor = (callback) => {
-//    const pTags = document.getElementsByClassName('ptag');
-//    console.log(pTags[0].attributes[1])
-//    console.log(Array.isArray(Array.from(pTags)));
-
-//    Array.from(pTags).forEach(function(ptag) {
-//      let user = ptag.firstChild.innerText;
-//
-//      // console.log(ptag.attributes.style.value)
-//
-//        if (message.from === 'Admin') {
-//            callback(user, ptag, 'darkslategray');
-//        }
-//
-//        if (ptag.attributes[1] === undefined) {
-//            callback(user, ptag, 'darkgoldenrod');
-//        }
-//   })
-// };
-//
-// addaColor((user, tag, color) => {
-//   return tag.style.background += color;
-// })

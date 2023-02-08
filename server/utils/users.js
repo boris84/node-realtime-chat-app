@@ -2,11 +2,12 @@
   {
      id: "/#923dnci233438jfncrf3dc",
      name: 'Bob',
-     room: 'The Elite'
+     room: 'The Elite',
+     backgroundColor: 'red'
   }
 ]
 
-// add user(id, name, room) - post
+// add user(id, name, room, backgroundColor) - post
 // removeUser(id) - delete
 // getUser - get single user
 // getUserList(room) - get all users
@@ -16,8 +17,8 @@ class Users {
   constructor () {
     this.users = [];
   }
-  addUser (id, name, room) {
-    let user = {id, name, room};
+  addUser (id, name, room, backgroundColor) {
+    let user = {id, name, room, backgroundColor};
     this.users.push(user);
     return user;
   }
@@ -35,7 +36,7 @@ class Users {
     return this.users.filter((user) => user.id === id)[0];
   }
   getUserList (room) {
-    // get a list of all the usernames by roomname which means iterating through users array and looking for all users who's room amtches the room specified. Returns an array of strings.
+    // get a list of all the usernames by roomname which means iterating through users array and looking for all users who's room matches the room specified. Returns an array of strings.
     let users = this.users.filter((user) => user.room === room);
     let namesArray = users.map((user) => user.name);
 

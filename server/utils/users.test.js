@@ -10,17 +10,20 @@ describe('Users', () => {
     users.users = [{
       id: '1',
       name: 'Harry',
-      room: 'Room A'
+      room: 'Room A',
+      backgroundColor: 'yellow'
     },
     {
       id: '2',
       name: 'Jon',
-      room: 'Room B'
+      room: 'Room B',
+      backgroundColor: 'blue'
     },
     {
       id: '3',
       name: 'Abraham',
-      room: 'Room A'
+      room: 'Room A',
+      backgroundColor: 'green'
     }];
   });
 
@@ -29,9 +32,10 @@ describe('Users', () => {
      let user = {
        id: '938',
        name: 'Bob',
-       room: 'The Elite'
+       room: 'The Elite',
+       backgroundColor: 'red'
      };
-   let resUser = users.addUser(user.id, user.name, user.room);
+   let resUser = users.addUser(user.id, user.name, user.room, user.backgroundColor);
    expect(users.users).toEqual([user]);
   });
 

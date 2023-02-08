@@ -43,28 +43,39 @@ server.listen(PORT, () => {
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
-
+  let userColor;
 
   socket.on('join', (params, callback) => {
+    // console.log(params)
     if (!isRealString(params.name) || !isRealString(params.room)) {
       return callback('Name and Room are required.');
     }
-    socket.join(params.room);
-    users.removeUser(socket.id);
-    users.addUser(socket.id, params.name, params.room);
 
-    io.to(params.room).emit('updateUserList', users.getUserList(params.room));
-    // socket.leave('room event')
+    var letters = '0123456789ABCDEF'.split('');
+    var color = '#';
 
-    // io.emit -> io.to('room event').emit
-    // socket.broadcast.emit -> socket.broadcast.to('room event').emit
-    // socket.emit
+    function randColor() {
+       for (var i = 0; i < 6; i++ ) {
+         color += letters[Math.floor(Math.random() * 16)];
+       }
+         return color;
+      };
 
-    socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !'));
-    socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat...`));
-    callback();
+      userColor = randColor();
+
+      socket.join(params.room);
+      users.removeUser(socket.id);
+      users.addUser(socket.id, params.name, params.room, userColor);
+      io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+      // socket.leave('room event')
+
+      // io.emit -> io.to('room event').emit
+      // socket.broadcast.emit -> socket.broadcast.to('room event').emit
+      // socket.emit
+      socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !', 'darkslategray'));
+      socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat...`, 'darkslategray'));
+      callback();
   });
-
 
 
 
@@ -73,9 +84,11 @@ io.on('connection', (socket) => {
     let user = users.getUser(socket.id);
 
     if (user && isRealString(message.text)) {
-      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text));
+      io.to(user.room).emit('newMessage', generateMessage(user.name, message.text, user.backgroundColor));
     }
+    callback(message);
   });
+
 
 
   // Event listener for createLocationMessage
@@ -83,7 +96,7 @@ io.on('connection', (socket) => {
     let user = users.getUser(socket.id);
 
     if (user) {
-      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude));
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude, userColor));
     }
   });
 
@@ -103,8 +116,27 @@ io.on('connection', (socket) => {
 
     if (user) {
       io.to(user.room).emit('updateUserList', users.getUserList(user.room));
-      io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left the chat.`));
+      io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left the chat.`, 'darkslategray'));
     }
   });
 
 });
+
+
+
+
+
+
+
+
+
+
+// var letters = '0123456789ABCDEF'.split('');
+// var color = '#';
+//
+// function randColor() {
+//    for (var i = 0; i < 6; i++ ) {
+//      color += letters[Math.floor(Math.random() * 16)];
+//    }
+//      return color;
+//   };

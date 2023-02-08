@@ -46,13 +46,13 @@
     </div>
 
     <script id="message-template" type="text/template">
-      <p class="ptag"><strong>{{ from }}:</strong> {{ text }}</p>
+      <p class="ptag" style="background:{{ backgroundColor }}"><strong>{{ from }}:</strong> {{ text }}</p>
       <time>{{ createdAt }}</time>
       <div class="feedback">{{ feedback }}</div>
     </script>
 
     <script id="location-message-template" type="text/template">
-      <p><strong>{{ from }}:</strong> <a href="{{url}}" target="_blank">My current location</a></p>
+      <p class="ptag" style="background:{{ backgroundColor }}"><strong>{{ from }}:</strong> <a href="{{url}}" target="_blank">My current location</a></p>
       <time>{{ createdAt }}</time>
       <!-- <div class="feedback">{{ feedback }}</div> -->
     </script>
