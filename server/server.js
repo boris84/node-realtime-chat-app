@@ -7,6 +7,7 @@ const socket = require('socket.io');
 const cors = require('cors');
 app.use(cors());
 
+
 const server = http.createServer(app);
 // Socket.io set-up
 const io = socket(server, {
@@ -14,6 +15,8 @@ const io = socket(server, {
     origin: 'http://127.0.0.1:8000/'
   }
 });
+
+
 const {generateMessage, generateLocationMessage} = require('./utils/message');
 const {isRealString} = require('./utils/validation');
 const {Users} = require('./utils/users');
@@ -29,9 +32,7 @@ server.listen(PORT, () => {
 });
 
 
-
-
-
+let userColor;
 // Configure Server to allow for Incoming Websocket Connections.
 //This means the Server will be able to accept connections and we'll be setting up the client to make the connection.
 // The we'll have a persistent connection and we can send data back and forth whether from server to client or client to server.
@@ -43,7 +44,6 @@ server.listen(PORT, () => {
 io.on('connection', (socket) => {
   console.log('New User Connected');
 
-  let userColor;
 
   socket.on('join', (params, callback) => {
     // console.log(params)
@@ -51,6 +51,7 @@ io.on('connection', (socket) => {
       return callback('Name and Room are required.');
     }
 
+    // Random Color Generator Function
     var letters = '0123456789ABCDEF'.split('');
     var color = '#';
 
@@ -61,20 +62,20 @@ io.on('connection', (socket) => {
          return color;
       };
 
-      userColor = randColor();
+    userColor = randColor();
+    socket.join(params.room);
+    users.removeUser(socket.id);
+    users.addUser(socket.id, params.name, params.room, userColor);
+    io.to(params.room).emit('updateUserList', users.getUserList(params.room));
+    // socket.leave('room event')
 
-      socket.join(params.room);
-      users.removeUser(socket.id);
-      users.addUser(socket.id, params.name, params.room, userColor);
-      io.to(params.room).emit('updateUserList', users.getUserList(params.room));
-      // socket.leave('room event')
+    // io.emit -> io.to('room event').emit
+    // socket.broadcast.emit -> socket.broadcast.to('room event').emit
+    // socket.emit
 
-      // io.emit -> io.to('room event').emit
-      // socket.broadcast.emit -> socket.broadcast.to('room event').emit
-      // socket.emit
-      socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !', 'darkslategray'));
-      socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat...`, 'darkslategray'));
-      callback();
+    socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !', 'darkslategray'));
+    socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat...`, 'darkslategray'));
+    callback();
   });
 
 

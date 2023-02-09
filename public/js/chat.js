@@ -14,14 +14,13 @@ const locationButton = document.querySelector('.location-btn');
 const userList = document.querySelector('.users');
 
 
-
-
 // Initiate a connection request from client to server to open a websoket and keep that connection open
 var socket = io();
 
 socket.on('connect', function () {
-
   let params = $.deparam(window.location.search);
+  localStorage.setItem('name', params.name);
+  name.value = localStorage.getItem('name');
 
   socket.emit('join', params, function (err) {
     if (err) {
@@ -195,7 +194,7 @@ socket.on('newMessage', function (message) {
 
   chatWindow.scrollTop = chatWindow.scrollHeight;
   $('.output').append(html);
-  console.log('client: ', message);
+  // console.log('client: ', message);
 });
 
 
