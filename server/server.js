@@ -41,9 +41,8 @@ let userColor;
 // We pass in a callback to fire when connection is made.
 // Inside the callback we can pass a varible which is going to refer to THAT instance of the socket which is created - that 1 particukar socket.
 // So say we've got 10 different clients - ALL making a connection, each one is going to have their OWN socket between THAT client and our server.
-io.on('connection', (socket) => {
+io.on('connection', socket => {
   console.log('New User Connected');
-
 
   socket.on('join', (params, callback) => {
     // console.log(params)
@@ -52,17 +51,13 @@ io.on('connection', (socket) => {
     }
 
     // Random Color Generator Function
-    var letters = '0123456789ABCDEF'.split('');
-    var color = '#';
+    const randColor = (callback) => {
+       let color = '#'
+       color += Math.floor(Math.random()*16777215).toString(16);
+       return color;
+    };
+       userColor = randColor();
 
-    function randColor() {
-       for (var i = 0; i < 6; i++ ) {
-         color += letters[Math.floor(Math.random() * 16)];
-       }
-         return color;
-      };
-
-    userColor = randColor();
     socket.join(params.room);
     users.removeUser(socket.id);
     users.addUser(socket.id, params.name, params.room, userColor);
@@ -72,7 +67,6 @@ io.on('connection', (socket) => {
     // io.emit -> io.to('room event').emit
     // socket.broadcast.emit -> socket.broadcast.to('room event').emit
     // socket.emit
-
     socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !', 'darkslategray'));
     socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat...`, 'darkslategray'));
     callback();
@@ -83,7 +77,6 @@ io.on('connection', (socket) => {
   // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
     let user = users.getUser(socket.id);
-
     if (user && isRealString(message.text)) {
       io.to(user.room).emit('newMessage', generateMessage(user.name, message.text, user.backgroundColor));
     }
@@ -93,9 +86,8 @@ io.on('connection', (socket) => {
 
 
   // Event listener for createLocationMessage
-  socket.on('createLocationMessage', (coords) => {
+  socket.on('createLocationMessage', coords => {
     let user = users.getUser(socket.id);
-
     if (user) {
       io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude, userColor));
     }
@@ -103,18 +95,16 @@ io.on('connection', (socket) => {
 
 
   // Emit notification sound to all sockets except user that sent it
-  socket.broadcast.emit('notificationSound', true);
+  socket.broadcast.emit('notificationSound', false);
 
 
-  // // Handle typing event
-  socket.on('typing', (data) => {
-    socket.broadcast.emit('typing', data);
-  });
+  // Handle typing event
+  socket.on('typing', data => socket.broadcast.emit('typing', data));
 
 
+  // Handle disconnect event
   socket.on('disconnect', () => {
     let user = users.removeUser(socket.id);
-
     if (user) {
       io.to(user.room).emit('updateUserList', users.getUserList(user.room));
       io.to(user.room).emit('newMessage', generateMessage('Admin', `${user.name} has left the chat.`, 'darkslategray'));
@@ -132,6 +122,7 @@ io.on('connection', (socket) => {
 
 
 
+// Random Color Generator Function
 // var letters = '0123456789ABCDEF'.split('');
 // var color = '#';
 //

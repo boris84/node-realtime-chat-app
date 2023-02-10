@@ -18,6 +18,7 @@ const userList = document.querySelector('.users');
 var socket = io();
 
 socket.on('connect', function () {
+
   let params = $.deparam(window.location.search);
   localStorage.setItem('name', params.name);
   name.value = localStorage.getItem('name');
