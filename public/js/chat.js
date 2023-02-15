@@ -17,12 +17,14 @@ const userList = document.querySelector('.users');
 // Initiate a connection request from client to server to open a websoket and keep that connection open
 var socket = io();
 
+// Event listener for when a user connects to client
 socket.on('connect', function () {
 
   let params = $.deparam(window.location.search);
   localStorage.setItem('name', params.name);
   name.value = localStorage.getItem('name');
 
+  // Emit a join event to server
   socket.emit('join', params, function (err) {
     if (err) {
       alert(err);
@@ -36,6 +38,8 @@ socket.on('connect', function () {
 
 
 
+
+// Event listener for disconnect event from server
 socket.on('disconnect', function () {
   console.log('Disconnected from server');
 });
@@ -43,15 +47,17 @@ socket.on('disconnect', function () {
 
 
 
+
+// Event listener for updateUserList event from server
 socket.on('updateUserList', function (users) {
   let ol = $('<ol></ol>');
 
   users.forEach(function (user) {
     ol.append($('<li></li>').text(user));
   });
-
   $('.users').html(ol);
 });
+
 
 
 
@@ -78,11 +84,8 @@ icon2.addEventListener('click', function (e) {
 
 
 
-// EMIT EVENTS
-
-// Enit a new message from client
+// Emit a createMessage event to server
 button.addEventListener('click', function () {
-
     socket.emit('createMessage', {
       text: message.value
     }, function (message) {
@@ -98,8 +101,7 @@ button.addEventListener('click', function () {
 
 
 
-
-// Emit a Feedback message from client
+// Emit a typing event to server
 message.addEventListener('keydown', function () {
   socket.emit('typing', name.value);
 });
@@ -108,9 +110,8 @@ message.addEventListener('keydown', function () {
 
 
 
-// Send location
-
-// Send latititude and logitude co-ordinates to every one else connected to the chat app. The geolocation api is available in the client side javascript and is widely supported
+// Send location. Send latititude and logitude co-ordinates to every one else connected to the chat app.
+// The geolocation api is available in the client side javascript and is widely supported
 locationButton.addEventListener('click', function () {
   // first we need to check if the users browser has access to the geolocation api
   if (!navigator.geolocation) {
@@ -134,7 +135,7 @@ locationButton.addEventListener('click', function () {
       errors.classList.add('error');
       return errors.innerText = "Cannot process location. Name is required.";
     }
-
+    // Emit a createLocationMessage event to server
     socket.emit('createLocationMessage', {
       latitude: currentPosition.coords.latitude,
       longitude: currentPosition.coords.longitude,
@@ -155,10 +156,9 @@ locationButton.addEventListener('click', function () {
 
 
 
-
 // EVENT LISTENERS
 
-// Listen for typing event from server
+// Event listener for typing event from server
 socket.on('typing', function (data) {
    // scroll down
    chatWindow.scrollTop = chatWindow.scrollHeight;
@@ -170,8 +170,7 @@ socket.on('typing', function (data) {
 
 
 
-
-// Listen for newMessage event from server
+// Event listener for newMessage event from server
 socket.on('newMessage', function (message) {
   // console.log(message)
   let formattedTime = moment(message.createdAt).format('h:mm a');
@@ -202,10 +201,7 @@ socket.on('newMessage', function (message) {
 
 
 
-
-
-
-// Listen for notification event from server
+// Event listener for notificationSound event from server
 socket.on('notificationSound', function (sound) {
 
   if (sound) {
@@ -224,6 +220,7 @@ socket.on('notificationSound', function (sound) {
 
 
 
+// Event listener for newLocationMessage event from server
 socket.on('newLocationMessage', function (message) {
   let formattedTime = moment(message.createdAt).format('h:mm a');
   const template = $('#location-message-template').html();
@@ -245,6 +242,7 @@ socket.on('newLocationMessage', function (message) {
   chatWindow.scrollTop = chatWindow.scrollHeight;
   $('.output').append(html);
 });
+
 
 
 

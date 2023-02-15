@@ -51,7 +51,7 @@ io.on('connection', socket => {
     }
 
     // Random Color Generator Function
-    const randColor = (callback) => {
+    const randColor = () => {
        let color = '#'
        color += Math.floor(Math.random()*16777215).toString(16);
        return color;
@@ -74,7 +74,7 @@ io.on('connection', socket => {
 
 
 
-  // Event listener on server for createMessaage
+  // Event listener for createMessaage from client
   socket.on('createMessage', (message, callback) => {
     let user = users.getUser(socket.id);
     if (user && isRealString(message.text)) {
@@ -85,7 +85,7 @@ io.on('connection', socket => {
 
 
 
-  // Event listener for createLocationMessage
+  // Event listener for createLocationMessage from client
   socket.on('createLocationMessage', coords => {
     let user = users.getUser(socket.id);
     if (user) {
@@ -98,7 +98,7 @@ io.on('connection', socket => {
   socket.broadcast.emit('notificationSound', false);
 
 
-  // Handle typing event
+  // Handle typing event from client
   socket.on('typing', data => socket.broadcast.emit('typing', data));
 
 
