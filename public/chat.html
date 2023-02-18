@@ -9,7 +9,7 @@
   <link href="chat.css" type="text/css" rel="stylesheet">
   <title>Realtime Chat App</title>
 </head>
-<body>
+  <body>
     <div class="chatbox">
       <div class="side-bar">
         <i class="bi bi-people-fill icon1"></i>
@@ -35,9 +35,12 @@
         <form id="form">
           <input class="name-field" type="text" placeholder="Name" autofocus/>
           <input class="message-field" type="text" placeholder="Message"/>
+          <small class="custom-file-field-text">No file chosen</small>
           <div class="btn-container">
             <button type="button" class="btn">Send</button>
+            <input id="file-field" type="file" onchange="uploadFiles(this.files);" class="form-control" name="file-field" multiple accept="image/*" hidden="hidden"/>
             <button type="button" class="location-btn"><i class="bi bi-geo-alt-fill"></i></button>
+            <button type="button" class="file-field-btn"><i class="bi bi-paperclip"></i></button>
           </div>
         </form>
       </div>
@@ -48,16 +51,24 @@
     <script id="message-template" type="text/template">
       <p class="ptag" style="background:{{ backgroundColor }}"><strong>{{ from }}:</strong> {{ text }}</p>
       <time>{{ createdAt }}</time>
-      <div class="feedback">{{ feedback }}</div>
+    </script>
+
+    <script id="image-template" type="text/template">
+       <strong class="imgage_strong_tag">{{ from }}:</strong>
+        <p class="ptag" style="background:{{ backgroundColor }}"><img src={{ image }} class="image"/></p>
+      <time>{{ createdAt }}</time>
     </script>
 
     <script id="location-message-template" type="text/template">
       <p class="ptag" style="background:{{ backgroundColor }}"><strong>{{ from }}:</strong> <a href="{{url}}" target="_blank">My current location</a></p>
       <time>{{ createdAt }}</time>
-      <!-- <div class="feedback">{{ feedback }}</div> -->
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/emoji-button@latest/dist/index.min.js"></script>
+
+    <!-- socket.io file uploader script -->
+    <script src="/siofu/client.js"></script>
+
     <!-- loading in socket.io library -->
     <script src="/socket.io/socket.io.js"></script>
     <script src="/js/libs/moment.js"></script>
@@ -65,5 +76,5 @@
     <script src="/js/libs/mustache.js"></script>
     <script src="/js/libs/deparam.js"></script>
     <script src="/js/chat.js"></script>
-</body>
+  </body>
 </html>

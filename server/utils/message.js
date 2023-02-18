@@ -19,4 +19,14 @@ let generateLocationMessage = (from, latitude, longitude, backgroundColor) => {
   };
 };
 
-module.exports = {generateMessage, generateLocationMessage};
+
+let generateImage = (from, image, backgroundColor) => {
+  return {
+    from,
+    image,
+    backgroundColor,
+    createdAt: moment().valueOf() // returns the Unix Timestamp in milliseconds.
+  };
+};
+
+module.exports = {generateMessage, generateLocationMessage, generateImage};

@@ -1,12 +1,19 @@
 const express = require('express');
 const app = express();
 const http = require('http');
+const fs = require('fs');
+
 // Configure port for Heroku
 const PORT = process.env.PORT || 8000;
 const socket = require('socket.io');
-const cors = require('cors');
-app.use(cors());
 
+// Socketio-file-upload library
+const socketiofileupload = require('socketio-file-upload');
+
+const cors = require('cors');
+// Set app to use socketio file-upload router
+app.use(socketiofileupload.router);
+app.use(cors());
 
 const server = http.createServer(app);
 // Socket.io set-up
@@ -16,8 +23,8 @@ const io = socket(server, {
   }
 });
 
-
-const {generateMessage, generateLocationMessage} = require('./utils/message');
+const {writeFile, readFile} = require('fs');
+const {generateMessage, generateLocationMessage, generateImage} = require('./utils/message');
 const {isRealString} = require('./utils/validation');
 const {Users} = require('./utils/users');
 let users = new Users();
@@ -25,6 +32,8 @@ let users = new Users();
 
 // Static files
 app.use(express.static('public'));
+app.use(express.static('public/uploads'));
+
 
 
 server.listen(PORT, () => {
@@ -42,9 +51,10 @@ let userColor;
 // Inside the callback we can pass a varible which is going to refer to THAT instance of the socket which is created - that 1 particukar socket.
 // So say we've got 10 different clients - ALL making a connection, each one is going to have their OWN socket between THAT client and our server.
 io.on('connection', socket => {
-  console.log('New User Connected');
+  // console.log('New User Connected');
 
   socket.on('join', (params, callback) => {
+
     // console.log(params)
     if (!isRealString(params.name) || !isRealString(params.room)) {
       return callback('Name and Room are required.');
@@ -67,14 +77,14 @@ io.on('connection', socket => {
     // io.emit -> io.to('room event').emit
     // socket.broadcast.emit -> socket.broadcast.to('room event').emit
     // socket.emit
-    socket.emit('newMessage', generateMessage('Admin', 'Welcome to Ping. Let\'s chat !', 'darkslategray'));
+    socket.emit('newMessage', generateMessage('Admin', `Welcome to Ping, ${params.name}. Let\'s chat !`, 'darkslategray'));
     socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat...`, 'darkslategray'));
     callback();
   });
 
 
 
-  // Event listener for createMessaage from client
+  // Event listener on server for createMessaage
   socket.on('createMessage', (message, callback) => {
     let user = users.getUser(socket.id);
     if (user && isRealString(message.text)) {
@@ -85,11 +95,11 @@ io.on('connection', socket => {
 
 
 
-  // Event listener for createLocationMessage from client
+  // Event listener for createLocationMessage
   socket.on('createLocationMessage', coords => {
     let user = users.getUser(socket.id);
     if (user) {
-      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude, userColor));
+      io.to(user.room).emit('newLocationMessage', generateLocationMessage(user.name, coords.latitude, coords.longitude, user.backgroundColor));
     }
   });
 
@@ -98,8 +108,52 @@ io.on('connection', socket => {
   socket.broadcast.emit('notificationSound', false);
 
 
-  // Handle typing event from client
-  socket.on('typing', data => socket.broadcast.emit('typing', data));
+  // Handle typing event
+  socket.on('typing', (data) => {
+    let user = users.getUser(socket.id);
+    if (user) {
+      socket.broadcast.to(user.room).emit('typing', data);
+    }
+  });
+
+
+  // Handle localStorage data
+  // socket.on('storedMessages', messages => {
+  // let user = users.getUser(socket.id);
+  // if (user) {
+  //    io.to(user.room).emit('localStorageMessages', messages);
+  // }
+  // });
+
+
+
+  // File handler
+  var uploader = new socketiofileupload();
+  uploader.dir = 'public/uploads';
+  uploader.listen(socket);
+
+
+  // Whenever socket.io successfully uploads the file to the server this fires
+  uploader.on('saved', (event) => {
+    // set variable on clientDetail object and assign it the file name which can be referenced in client
+    event.file.clientDetail.nameOfImage = event.file.name;
+  });
+
+
+  socket.on('image', (data) => {
+    let user = users.getUser(socket.id);
+    if (user) {
+      io.to(user.room).emit('newImage', generateImage(user.name, data.image, user.backgroundColor));
+    }
+    // console.log(data)
+  })
+
+
+  // if error takes place
+  uploader.on('error', (event) => {
+    console.log('Uploader error event: ', event);
+  })
+
 
 
   // Handle disconnect event
@@ -112,12 +166,6 @@ io.on('connection', socket => {
   });
 
 });
-
-
-
-
-
-
 
 
 

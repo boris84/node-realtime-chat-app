@@ -1,69 +1,99 @@
 // Query DOM
 const name = document.querySelector('.name-field');
+const message = document.querySelector('.message-field');
 const feedback = document.querySelector('.feedback');
+const form = document.getElementById('form');
 const errors = document.querySelector('.errors');
 const notification = document.getElementById('notification-sound');
 const button = document.querySelector('.btn');
-const message = document.querySelector('.message-field');
+const locationButton = document.querySelector('.location-btn');
 const sidebar = document.querySelector('.side-bar');
 const chatWindow = document.querySelector('.chat-window');
 const icon1 = document.querySelector('.icon1');
 const icon2 = document.querySelector('.icon2');
 const h3 = document.querySelector('h3');
-const locationButton = document.querySelector('.location-btn');
 const userList = document.querySelector('.users');
-
+const fileFieldInput = document.getElementById('file-field');
+const customFileButton = document.querySelector('.file-field-btn');
+const customFileText = document.querySelector('.custom-file-field-text');
 
 // Initiate a connection request from client to server to open a websoket and keep that connection open
-var socket = io();
+let socket = io();
 
-// Event listener for when a user connects to client
-socket.on('connect', function () {
 
-  let params = $.deparam(window.location.search);
-  localStorage.setItem('name', params.name);
-  name.value = localStorage.getItem('name');
 
-  // Emit a join event to server
-  socket.emit('join', params, function (err) {
-    if (err) {
-      alert(err);
-      window.location.href = '/';
-    } else {
-      // console.log('no error');
+// Custom file upload button & Custom file text
+customFileButton.addEventListener('click', function() {
+  fileFieldInput.click();
+});
+
+const uploadFiles = function(files) {
+  if (fileFieldInput.value) {
+    // Remove initial customFileText
+    customFileText.remove();
+    // Crete a new element
+    let small = document.createElement('small');
+    small.setAttribute('class', 'custom-file-field-text');
+    // loop through every file and get the name of the file
+    for (var i = 0; i < fileFieldInput.files.length; ++i) {
+      small.innerHTML += ' ' + fileFieldInput.files.item(i).name + ' /';
     }
+    $(small).insertBefore('.btn-container');
+  } else {
+    customFileText.innerHTML = 'No file Chosen, yet';
+  }
+};
+
+
+
+
+// Invoke socket.io file upload library
+let siofu = new SocketIOFileUpload(socket);
+siofu.listenOnInput(fileFieldInput);
+// listen for progress event & log file progress by percent
+siofu.addEventListener('progress', function(event) {
+  let percent = (event.bytesLoaded / event.file.size) * 100;
+  // console.log('File is: ', percent.toFixed(2), 'percent loaded');
+});
+
+
+// completion event which catches the name of file which is passed from server
+siofu.addEventListener('complete', function(event) {
+  socket.emit('image', {
+    image: event.detail.nameOfImage,
+    backgroundColor: event.detail.backgroundColor
   });
+  // console.log(event)
 });
 
 
 
 
+// Event listener for newImage event from server
+socket.on('newImage', function(message) {
+  let formattedTime = moment(message.createdAt).format('h:mm a');
+  const template = $('#image-template').html();
 
-// Event listener for disconnect event from server
-socket.on('disconnect', function () {
-  console.log('Disconnected from server');
-});
+  feedback.innerHTML = '';
+  errors.innerHTML = '';
+  // console.log(message);
 
-
-
-
-
-// Event listener for updateUserList event from server
-socket.on('updateUserList', function (users) {
-  let ol = $('<ol></ol>');
-
-  users.forEach(function (user) {
-    ol.append($('<li></li>').text(user));
+  let html = Mustache.render(template, {
+    from: message.from,
+    image: message.image,
+    backgroundColor: message.backgroundColor,
+    createdAt: formattedTime
   });
-  $('.users').html(ol);
-});
 
+  chatWindow.scrollTop = chatWindow.scrollHeight;
+  $('.output').append(html);
+})
 
 
 
 
 // toggle sidebar button open
-icon1.addEventListener('click', function (e) {
+icon1.addEventListener('click', function(e) {
   sidebar.classList.add('active');
   icon1.style.display = 'none';
   icon2.style.display = 'block';
@@ -72,7 +102,7 @@ icon1.addEventListener('click', function (e) {
 });
 
 // toggle sidebar button closed
-icon2.addEventListener('click', function (e) {
+icon2.addEventListener('click', function(e) {
   sidebar.classList.remove('active');
   icon2.style.display = 'none';
   icon1.style.display = 'block';
@@ -83,14 +113,75 @@ icon2.addEventListener('click', function (e) {
 
 
 
+socket.on('connect', function() {
+  let params = $.deparam(window.location.search);
+  localStorage.setItem('name', params.name);
+  name.value = localStorage.getItem('name');
 
-// Emit a createMessage event to server
-button.addEventListener('click', function () {
+  socket.emit('join', params, function(err) {
+    if (err) {
+      alert(err);
+      window.location.href = '/';
+    } else {
+     // console.log('no error');
+    }
+  });
+});
+
+
+
+
+// Print localStorage messages onload
+// const localStorageOnload = function() {
+//   let localStorageMessages = getMessagesFromLocalStorage();
+//   socket.emit('storedMessages', localStorageMessages);
+// };
+//
+// socket.on('localStorageMessages', function(localStorageMessages) {
+//   let formattedTime = moment(message.createdAt).format('h:mm a');
+//
+//   let html = ``;
+//   // loop through storage and print messages
+//   localStorageMessages.forEach(function(message) {
+//     html += `<p class="ptag" style="background:${message.backgroundColor}"><strong>${message.from}: </strong>${message.text}</p>
+//     <time>${formattedTime}</time>`;
+//   })
+//   $('.output').append(html)
+// });
+
+
+
+
+// Event listener for diconnect event from server
+socket.on('disconnect', function() {
+  console.log('Disconnected from server');
+});
+
+
+
+
+// Event listener for updateUserList event from server
+socket.on('updateUserList', function(users) {
+  let ol = $('<ol></ol>');
+
+  users.forEach(function (user) {
+    ol.append($('<li></li>').text(user));
+  });
+
+  $('.users').html(ol);
+});
+
+
+
+
+// Emit creatMessage event from client to server
+button.addEventListener('click', function() {
+
     socket.emit('createMessage', {
       text: message.value
     }, function (message) {
          // scroll down
-         chatWindow.scrollTop = chatWindow.scrollHeight;
+         // chatWindow.scrollTop = chatWindow.scrollHeight;
          errors.classList.add('error');
          errors.innerHTML = '';
     });
@@ -100,19 +191,16 @@ button.addEventListener('click', function () {
 
 
 
-
-// Emit a typing event to server
-message.addEventListener('keydown', function () {
+// Emit a typing event from client to server
+message.addEventListener('keydown', function() {
   socket.emit('typing', name.value);
 });
 
 
 
 
-
-// Send location. Send latititude and logitude co-ordinates to every one else connected to the chat app.
-// The geolocation api is available in the client side javascript and is widely supported
-locationButton.addEventListener('click', function () {
+// Send location. Send latititude and logitude co-ordinates to every one else connected to the chat app. The geolocation api is available in the client side javascript and is widely supported
+locationButton.addEventListener('click', function() {
   // first we need to check if the users browser has access to the geolocation api
   if (!navigator.geolocation) {
     // scroll down
@@ -125,7 +213,7 @@ locationButton.addEventListener('click', function () {
   document.querySelector('.location-btn i').style.textShadow = 'none';
 
   // getCurrentPosition takes 2 functions. A succes function and a failure function
-  navigator.geolocation.getCurrentPosition(function (currentPosition) {
+  navigator.geolocation.getCurrentPosition(function(currentPosition) {
     locationButton.removeAttribute('disabled', 'disabled');
     document.querySelector('.location-btn i').style.textShadow = '0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000';
 
@@ -135,7 +223,7 @@ locationButton.addEventListener('click', function () {
       errors.classList.add('error');
       return errors.innerText = "Cannot process location. Name is required.";
     }
-    // Emit a createLocationMessage event to server
+    // Emit createLocationMessage event with geolocation coords from client to server
     socket.emit('createLocationMessage', {
       latitude: currentPosition.coords.latitude,
       longitude: currentPosition.coords.longitude,
@@ -156,10 +244,9 @@ locationButton.addEventListener('click', function () {
 
 
 
-// EVENT LISTENERS
 
-// Event listener for typing event from server
-socket.on('typing', function (data) {
+// Listen for typing event from server
+socket.on('typing', function(data) {
    // scroll down
    chatWindow.scrollTop = chatWindow.scrollHeight;
    errors.innerHTML = '';
@@ -169,13 +256,11 @@ socket.on('typing', function (data) {
 
 
 
-
 // Event listener for newMessage event from server
-socket.on('newMessage', function (message) {
+socket.on('newMessage', function(message) {
   // console.log(message)
   let formattedTime = moment(message.createdAt).format('h:mm a');
   const template = $('#message-template').html();
-  let ptags = document.querySelectorAll('.ptag');
 
   if (!message.from || !message.text) {
     return;
@@ -188,40 +273,69 @@ socket.on('newMessage', function (message) {
     from: message.from,
     text: message.text,
     backgroundColor: message.backgroundColor,
-    createdAt: formattedTime,
-    feedback: feedback.innerHTML
+    createdAt: formattedTime
   });
 
   chatWindow.scrollTop = chatWindow.scrollHeight;
   $('.output').append(html);
-  // console.log('client: ', message);
+
+  // Add message to localStorage
+  // addMessageToLocalStorage(message)
 });
 
 
 
 
+// Add messages to localStorage
+// const addMessageToLocalStorage = function(message) {
+//   let localStorageMessages = getMessagesFromLocalStorage();
+//   // Add message into the array
+//   localStorageMessages.push(message);
+//   // Convert array into string and add to localStorage
+//   localStorage.setItem('messages', JSON.stringify(localStorageMessages));
+// };
+
+
+
+
+// Get messages from localStorage
+// const getMessagesFromLocalStorage = function() {
+//   let localStorageMessages;
+//
+//   if (!localStorage) {
+//     console.log('localStorage is not supported.');
+//     // Get values, if null is returned then we create an empty array
+//   } else if (localStorage.getItem('messages') === null) {
+//     localStorageMessages = [];
+//   } else {
+//     localStorageMessages = JSON.parse(localStorage.getItem('messages'));
+//   }
+//   return localStorageMessages;
+// };
+
+
+
 
 // Event listener for notificationSound event from server
-socket.on('notificationSound', function (sound) {
+socket.on('notificationSound', function(sound) {
 
   if (sound) {
-    socket.on('newMessage', function () {
+    socket.on('newMessage', function() {
       notification.play()
     });
   } else {
       // scroll down
-      chatWindow.scrollTop = chatWindow.scrollHeight;
+      // chatWindow.scrollTop = chatWindow.scrollHeight;
       errors.classList.add('error');
-      errors.innerHTML = 'Your browser does not support the audio element required for notification sounds.';
+      // errors.innerHTML = 'Your browser does not support the audio element required for notification sounds.';
   }
 });
 
 
 
 
-
 // Event listener for newLocationMessage event from server
-socket.on('newLocationMessage', function (message) {
+socket.on('newLocationMessage', function(message) {
   let formattedTime = moment(message.createdAt).format('h:mm a');
   const template = $('#location-message-template').html();
 
@@ -246,7 +360,6 @@ socket.on('newLocationMessage', function (message) {
 
 
 
-
 // Emoji picker
 const emojiTrigger = document.querySelector('span');
 
@@ -258,7 +371,7 @@ const picker = new EmojiButton({
   autoHide: false
 });
 
-emojiTrigger.addEventListener('click', function () {
+emojiTrigger.addEventListener('click', function() {
   picker.pickerVisible ? picker.hidePicker() : picker.showPicker(message);
 });
 
@@ -266,3 +379,6 @@ emojiTrigger.addEventListener('click', function () {
 picker.on('emoji', function (emoji) {
   message.value += emoji;
 });
+
+
+// localStorageOnload();
