@@ -111,18 +111,18 @@ io.on('connection', socket => {
   // Handle typing event
   socket.on('typing', (data) => {
     let user = users.getUser(socket.id);
-    if (user) {
+    if (user && isRealString(data)) {
       socket.broadcast.to(user.room).emit('typing', data);
     }
   });
 
 
   // Handle localStorage data
-  // socket.on('storedMessages', messages => {
+  // socket.on('localStorageMessages', messages => {
   // let user = users.getUser(socket.id);
-  // if (user) {
-  //    io.to(user.room).emit('localStorageMessages', messages);
-  // }
+  //   if (user) {
+  //      io.to(user.room).emit('newLocalStorageMessages', messages);
+  //   }
   // });
 
 
@@ -166,7 +166,6 @@ io.on('connection', socket => {
   });
 
 });
-
 
 
 

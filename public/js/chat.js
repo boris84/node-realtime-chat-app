@@ -30,17 +30,23 @@ customFileButton.addEventListener('click', function() {
 const uploadFiles = function(files) {
   if (fileFieldInput.value) {
     // Remove initial customFileText
-    customFileText.remove();
+    customFileText.style.display = 'none';
+
     // Crete a new element
     let small = document.createElement('small');
     small.setAttribute('class', 'custom-file-field-text');
+    $(small).insertBefore('.btn-container');
+
     // loop through every file and get the name of the file
     for (var i = 0; i < fileFieldInput.files.length; ++i) {
       small.innerHTML += ' ' + fileFieldInput.files.item(i).name + ' /';
+      small.style.color = 'lime';
     }
-    $(small).insertBefore('.btn-container');
-  } else {
-    customFileText.innerHTML = 'No file Chosen, yet';
+
+    setTimeout(() => {
+      small.remove();
+      customFileText.style.display = 'block';
+    }, 5000);
   }
 };
 
@@ -134,15 +140,15 @@ socket.on('connect', function() {
 // Print localStorage messages onload
 // const localStorageOnload = function() {
 //   let localStorageMessages = getMessagesFromLocalStorage();
-//   socket.emit('storedMessages', localStorageMessages);
+//   socket.emit('localStorageMessages', localStorageMessages);
 // };
 //
-// socket.on('localStorageMessages', function(localStorageMessages) {
+// socket.on('newLocalStorageMessages', function(newLocalStorageMessages) {
 //   let formattedTime = moment(message.createdAt).format('h:mm a');
 //
 //   let html = ``;
 //   // loop through storage and print messages
-//   localStorageMessages.forEach(function(message) {
+//   newLocalStorageMessages.forEach(function(message) {
 //     html += `<p class="ptag" style="background:${message.backgroundColor}"><strong>${message.from}: </strong>${message.text}</p>
 //     <time>${formattedTime}</time>`;
 //   })
@@ -280,7 +286,7 @@ socket.on('newMessage', function(message) {
   $('.output').append(html);
 
   // Add message to localStorage
-  // addMessageToLocalStorage(message)
+  // addMessageToLocalStorage(message);
 });
 
 
@@ -289,10 +295,11 @@ socket.on('newMessage', function(message) {
 // Add messages to localStorage
 // const addMessageToLocalStorage = function(message) {
 //   let localStorageMessages = getMessagesFromLocalStorage();
-//   // Add message into the array
+//   // // Add message into the array
 //   localStorageMessages.push(message);
-//   // Convert array into string and add to localStorage
+//   // // Convert array into string and add to localStorage
 //   localStorage.setItem('messages', JSON.stringify(localStorageMessages));
+//   localStorageOnload();
 // };
 
 
@@ -379,6 +386,3 @@ emojiTrigger.addEventListener('click', function() {
 picker.on('emoji', function (emoji) {
   message.value += emoji;
 });
-
-
-// localStorageOnload();
