@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const http = require('http');
 const fs = require('fs');
+const path = require('path');
+const { connectToDb, getDb } = require('./utils/db');
+
 
 // Configure port for Heroku
 const PORT = process.env.PORT || 8000;
@@ -35,10 +38,20 @@ app.use(express.static('public'));
 app.use(express.static('public/uploads'));
 
 
+let db;
 
-server.listen(PORT, () => {
-  console.log(`listening for requests on port ${PORT}`);
-});
+// db connection
+connectToDb((err) => {
+  if (!err) {
+    server.listen(PORT, () => {
+      console.log(`listening for requests on port ${PORT}`);
+    });
+    db = getDb();
+  }
+})
+
+
+
 
 
 let userColor;
@@ -117,15 +130,6 @@ io.on('connection', socket => {
   });
 
 
-  // Handle localStorage data
-  // socket.on('localStorageMessages', messages => {
-  // let user = users.getUser(socket.id);
-  //   if (user) {
-  //      io.to(user.room).emit('newLocalStorageMessages', messages);
-  //   }
-  // });
-
-
 
   // File handler
   var uploader = new socketiofileupload();
@@ -137,7 +141,10 @@ io.on('connection', socket => {
   uploader.on('saved', (event) => {
     // set variable on clientDetail object and assign it the file name which can be referenced in client
     event.file.clientDetail.nameOfImage = event.file.name;
+    // console.log(event)
   });
+
+
 
 
   socket.on('image', (data) => {

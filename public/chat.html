@@ -32,15 +32,15 @@
 
       <div class="user-input">
         <span>😀</span>
-        <form id="form">
+        <form id="form" enctype="multipart/form-data">
           <input class="name-field" type="text" placeholder="Name" autofocus/>
           <input class="message-field" type="text" placeholder="Message"/>
-          <small class="custom-file-field-text">No file Chosen</small>
+          <small class="custom-file-text">No file Chosen</small>
           <div class="btn-container">
             <button type="button" class="btn">Send</button>
-            <input id="file-field" type="file" onchange="uploadFiles(this.files);" class="form-control" name="file-field" multiple accept="image/*" hidden="hidden"/>
+            <input id="file" type="file" onchange="uploadFiles(this.files);" class="form-control" name="file" multiple accept="image/*" hidden="hidden"/>
             <button type="button" class="location-btn"><i class="bi bi-geo-alt-fill"></i></button>
-            <button type="button" class="file-field-btn"><i class="bi bi-paperclip"></i></button>
+            <button type="button" class="file-btn"><i class="bi bi-paperclip"></i></button>
           </div>
         </form>
       </div>

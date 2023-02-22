@@ -277,7 +277,6 @@ span:hover {
   font-size: 0.9rem;
   border: 0.1px solid lightgray;
   font-family: 'Verdana', sans-serif;
-  margin-bottom: 3px;
 }
 
 .name-field, .message-field:focus {
@@ -304,7 +303,7 @@ span:hover {
 
 }
 
-.file-field-btn {
+.file-btn {
   color: #fff;
   flex-grow: 1;
   cursor: pointer;
@@ -316,11 +315,11 @@ span:hover {
 
 }
 
-.file-field-btn > i {
+.file-btn > i {
   text-shadow: 0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000;
 }
 
-.custom-file-field-text {
+.custom-file-text {
   display: block;
   color: #fff;
   background: rgba(20, 20, 20, 0.95);

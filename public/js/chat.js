@@ -13,9 +13,9 @@ const icon1 = document.querySelector('.icon1');
 const icon2 = document.querySelector('.icon2');
 const h3 = document.querySelector('h3');
 const userList = document.querySelector('.users');
-const fileFieldInput = document.getElementById('file-field');
-const customFileButton = document.querySelector('.file-field-btn');
-const customFileText = document.querySelector('.custom-file-field-text');
+const fileFieldInput = document.getElementById('file');
+const customFileButton = document.querySelector('.file-btn');
+const customFileText = document.querySelector('.custom-file-text');
 
 // Initiate a connection request from client to server to open a websoket and keep that connection open
 let socket = io();
@@ -34,12 +34,12 @@ const uploadFiles = function(files) {
 
     // Crete a new element
     let small = document.createElement('small');
-    small.setAttribute('class', 'custom-file-field-text');
+    small.setAttribute('class', 'custom-file-text');
     $(small).insertBefore('.btn-container');
 
     // loop through every file and get the name of the file
     for (var i = 0; i < fileFieldInput.files.length; ++i) {
-      small.innerHTML += ' ' + fileFieldInput.files.item(i).name + ' /';
+      small.innerHTML += ' ' + fileFieldInput.files.item(i).name + ' *';
       small.style.color = 'lime';
     }
 
@@ -133,27 +133,6 @@ socket.on('connect', function() {
     }
   });
 });
-
-
-
-
-// Print localStorage messages onload
-// const localStorageOnload = function() {
-//   let localStorageMessages = getMessagesFromLocalStorage();
-//   socket.emit('localStorageMessages', localStorageMessages);
-// };
-//
-// socket.on('newLocalStorageMessages', function(newLocalStorageMessages) {
-//   let formattedTime = moment(message.createdAt).format('h:mm a');
-//
-//   let html = ``;
-//   // loop through storage and print messages
-//   newLocalStorageMessages.forEach(function(message) {
-//     html += `<p class="ptag" style="background:${message.backgroundColor}"><strong>${message.from}: </strong>${message.text}</p>
-//     <time>${formattedTime}</time>`;
-//   })
-//   $('.output').append(html)
-// });
 
 
 
@@ -288,37 +267,6 @@ socket.on('newMessage', function(message) {
   // Add message to localStorage
   // addMessageToLocalStorage(message);
 });
-
-
-
-
-// Add messages to localStorage
-// const addMessageToLocalStorage = function(message) {
-//   let localStorageMessages = getMessagesFromLocalStorage();
-//   // // Add message into the array
-//   localStorageMessages.push(message);
-//   // // Convert array into string and add to localStorage
-//   localStorage.setItem('messages', JSON.stringify(localStorageMessages));
-//   localStorageOnload();
-// };
-
-
-
-
-// Get messages from localStorage
-// const getMessagesFromLocalStorage = function() {
-//   let localStorageMessages;
-//
-//   if (!localStorage) {
-//     console.log('localStorage is not supported.');
-//     // Get values, if null is returned then we create an empty array
-//   } else if (localStorage.getItem('messages') === null) {
-//     localStorageMessages = [];
-//   } else {
-//     localStorageMessages = JSON.parse(localStorage.getItem('messages'));
-//   }
-//   return localStorageMessages;
-// };
 
 
 
