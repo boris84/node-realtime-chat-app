@@ -1,5 +1,5 @@
 const expect = require('expect');
-const {generateMessage, generateLocationMessage} = require('./message');
+const {generateMessage, generateLocationMessage, generateImage} = require('./message');
 
 describe('generateMessage', () => {
   it('should generate correct message object', () => {
@@ -24,5 +24,17 @@ describe('generateLocationMessage', () => {
 
     expect(message.createdAt).toBeA('number');
     expect(message).toInclude({from, url, backgroundColor});
+  });
+});
+
+describe('generateImage', () => {
+  it('should generate correct message object', () => {
+    let from = 'Harry';
+    let image = 'Some image';
+    let backgroundColor = 'green';
+    let message = generateImage(from, image, backgroundColor);
+
+    expect(message.createdAt).toBeA('number');
+    expect(message).toInclude({from, image, backgroundColor});
   });
 });
