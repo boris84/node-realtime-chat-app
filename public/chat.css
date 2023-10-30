@@ -9,23 +9,32 @@
   font-family: 'Roboto', sans-serif;
 }
 
+body {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
 .chatbox {
   position: relative;
   box-shadow: 0px 0px 10px 1px dimgray;
-  height: 100vh;
-  width: 100%;
+  height: 95vh;
+  max-width: 450px;
+  margin: auto;
   overflow: hidden;
   border: 5px solid #fff;
+  margin: 10px;
 }
 
 .side-bar {
   position: relative;
-  background: darkslategray;
+  background: #313C48;
   width: 40px;
-  height: 83%;
+  height: 100%;
   float: left;
   border-right: 5px solid #fff;
-  transition: width 0.8s ease 0.3s;
+  transition: width 0.3s ease 0.2s;
 }
 
 .icon1 {
@@ -59,10 +68,6 @@
   padding-left: 13px;
 }
 
-.users ol {
-  /* border-top: 1px solid #fff; */
-}
-
 .users li {
   color: #fff;
   margin: 16px 0;
@@ -80,7 +85,7 @@
 }
 
 .fadein {
-  animation: fadein 0s ease 0.8s forwards;
+  animation: fadein 0s ease 0.5s forwards;
 }
 
 @keyframes fadein {
@@ -101,7 +106,7 @@
 header {
   display: flex;
   align-items: center;
-  background: darkslategray;
+  background: #313C48;
   display: fixed;
   top: 0;
   left: 0;
@@ -116,7 +121,7 @@ header > i {
 }
 
 header h1 {
-  color: forestgreen;
+  color: #F49E11;
   font-size: 2.5rem;
   font-family: 'Titan One', cursive;
   text-shadow: -1px 0 3px #000, -1px 0 2px #000, 1px -1px 3px #000, 1px 2px 3px #000;
@@ -125,15 +130,14 @@ header h1 {
 
 .chat-window {
   overflow: auto;
-  height: 75vh;
+  height: 100%;
   background: rgba(20, 20, 20, 0.95);
-  /* padding-bottom: 150px; */
+  padding-bottom: 260px;
 }
 
-.custom-file-field-text-container {
-  /* background: black; */
-height: 2rem;
-}
+/* .custom-file-field-text-container {
+  height: 2rem;
+} */
 
 .container {
   overflow: hidden;
@@ -184,9 +188,10 @@ height: 2rem;
 .image {
   width: 150px;
   height: 150px;
+  object-fit: cover;
 }
 
-.imgage_strong_tag {
+.image_strong_tag {
   display: block;
   color: #fff;
   font-size: 0.9rem;
@@ -297,9 +302,9 @@ span:hover {
   cursor: pointer;
   width: 80%;
   transition: all 0.2s ease;
-  background: darkslategray;
+  background: #313C48;
   border: none;
-  margin-top: 3px;
+  /* margin-top: 3px; */
 
 }
 
@@ -309,10 +314,9 @@ span:hover {
   cursor: pointer;
   font-size: 1rem;
   border: none;
-  background: rgba(20, 20, 20, 0.95);
+  background: #313C48;
   padding: 0px 20px;
-  margin-top: 3px;
-
+  /* margin-top: 3px; */
 }
 
 .file-btn > i {
@@ -339,15 +343,14 @@ span:hover {
   cursor: pointer;
   font-size: 0.9rem;
   border: none;
-  margin-top: 3px;
-
+  /* margin-top: 3px; */
 }
 
 .location-btn > i {
   text-shadow: 0 0 2px #000, -1px 0 2px #000, 3px -0px 3px #000, 1px 2px 3px #000;
 }
 
-.btn:hover, .file-field-btn:hover, .location-btn:hover {
+.btn:hover, .location-btn:hover, .file-btn:hover {
   filter: brightness(80%);
 }
 

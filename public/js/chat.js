@@ -121,8 +121,8 @@ icon2.addEventListener('click', function(e) {
 
 socket.on('connect', function() {
   let params = $.deparam(window.location.search);
-  localStorage.setItem('name', params.name);
-  name.value = localStorage.getItem('name');
+  // localStorage.setItem('name', params.name);
+  // name.value = localStorage.getItem('name');
 
   socket.emit('join', params, function(err) {
     if (err) {
@@ -137,7 +137,8 @@ socket.on('connect', function() {
 
 
 
-// Event listener for diconnect event from server
+
+// Event listener for disconnect event from server
 socket.on('disconnect', function() {
   console.log('Disconnected from server');
 });
@@ -159,7 +160,23 @@ socket.on('updateUserList', function(users) {
 
 
 
-// Emit creatMessage event from client to server
+
+  // socket.on('joinedroom', function() {
+  //   console.log('client1 event triggered')
+  // })
+  //
+  // setTimeout(() => {
+  //   let params = $.deparam(window.location.search);
+  //
+  //   socket.emit('join_room')
+  // }, 3000)
+  //
+
+
+
+
+
+// Emit createMessage event from client to server
 button.addEventListener('click', function() {
 
     socket.emit('createMessage', {
@@ -172,6 +189,9 @@ button.addEventListener('click', function() {
     });
       message.value = '';
 })
+
+
+
 
 
 
@@ -243,7 +263,7 @@ socket.on('typing', function(data) {
 
 // Event listener for newMessage event from server
 socket.on('newMessage', function(message) {
-  // console.log(message)
+
   let formattedTime = moment(message.createdAt).format('h:mm a');
   const template = $('#message-template').html();
 
@@ -267,6 +287,9 @@ socket.on('newMessage', function(message) {
   // Add message to localStorage
   // addMessageToLocalStorage(message);
 });
+
+
+
 
 
 
