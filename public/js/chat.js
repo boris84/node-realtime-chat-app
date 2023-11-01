@@ -93,6 +93,14 @@ socket.on('newImage', function(message) {
 
   chatWindow.scrollTop = chatWindow.scrollHeight;
   $('.output').append(html);
+  
+  $('.image').on('click', () => {
+    $('.image').addClass('open')
+  })
+
+  $('.side-bar, .btn').on('click', () => {
+    $('.image').removeClass('open')
+  })
 })
 
 
