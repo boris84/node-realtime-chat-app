@@ -76,7 +76,7 @@ io.on('connection', (socket) => {
     // io.emit -> io.to('room event').emit
     // socket.broadcast.emit -> socket.broadcast.to('room event').emit
     // socket.emit
-    socket.emit('newMessage', generateMessage('Admin',`Welcome to Ping, ${params.name}. Let\'s chat !`,'#313C48'));
+    socket.emit('newMessage', generateMessage('Admin', `Welcome to Ping, ${params.name}. Let\'s chat !`, '#313C48'));
     socket.broadcast.to(params.room).emit('newMessage', generateMessage('Admin', `${params.name} has joined the chat...`, '#313C48'));
     callback();
   });
