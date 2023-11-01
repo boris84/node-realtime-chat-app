@@ -123,6 +123,7 @@ socket.on('connect', function() {
   let params = $.deparam(window.location.search);
   // localStorage.setItem('name', params.name);
   // name.value = localStorage.getItem('name');
+  name.value = params.name;
 
   socket.emit('join', params, function(err) {
     if (err) {
